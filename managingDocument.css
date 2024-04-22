@@ -1,0 +1,31 @@
+/* Additional styles for document management page */
+
+.form-container {
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    width: 50%;
+    margin: 20px auto;
+    position: relative;
+}
+
+.document-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+.input-group label {
+    margin-bottom: 5px;
+    display: block;
+}
+
+.action-buttons button {
+    background-color: red;
+    color: white;
+    border: none;
+   
+}
