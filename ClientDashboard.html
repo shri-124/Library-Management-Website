@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library Dashboard</title>
-    <link rel="stylesheet" href="LibraryDashboard.css">
+    <link rel="stylesheet" href="ClientDashboard.css">
 </head>
 <body>
     <header>
@@ -25,8 +25,16 @@
                 <li>To Kill a Mockingbird - Due back: May 15, 2024</li>
             </ul>
         </section>
+        <!-- Search bar section -->
+        <section class="search-bar">
+        </section>
+
         <section class="available-books">
             <h2>Available for Checkout</h2>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search for a document...">
+                <button id="search-button" type="button" onclick="submitSearch()">Submit</button>    
+            </div>
             <ul>
                 <!-- Sample available books -->
                 <li>Pride and Prejudice</li>
@@ -38,5 +46,6 @@
     <footer>
         <p>Library System - All rights reserved</p>
     </footer>
+    <script src="search.js"></script>
 </body>
 </html>
