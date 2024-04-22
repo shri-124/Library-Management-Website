@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librarian Dashboard</title>
+    <link rel="stylesheet" href="librarian-dashboard.css">
+</head>
+<body>
+    <div class="main-container">
+        <h1>Librarian Dashboard</h1>
+        
+        <div class="form-container">
+            <h2>Register New Client</h2>
+            <form id="registrationForm">
+                <input type="text" id="name" name="name" placeholder="Client Name" required>
+                <input type="email" id="email" name="email" placeholder="Email Address" required>
+                <input type="text" id="address" name="address" placeholder="Address" required>
+                <input type="text" id="payment-info" name="payment-info" placeholder="Payment Information">
+                <button type="submit">Register Client</button>
+            </form>
+        </div>
+
+        <div class="form-container">
+            <h2>Update Client Information</h2>
+            <form id="updateForm">
+                <input type="text" id="client-id" name="client-id" placeholder="Client ID" required>
+                <input type="text" id="update-name" name="update-name" placeholder="New Name">
+                <input type="text" id="update-address" name="update-address" placeholder="New Address">
+                <input type="text" id="update-payment-info" name="update-payment-info" placeholder="New Payment Info">
+                <button type="submit">Update Client</button>
+            </form>
+        </div>
+
+        <div class="form-container">
+            <h2>Delete Client</h2>
+            <form id="deleteForm">
+                <input type="text" id="delete-client-id" name="delete-client-id" placeholder="Client ID" required>
+                <button type="submit">Delete Client</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

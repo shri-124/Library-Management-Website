@@ -22,16 +22,28 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
-                <a href="ClientDashboard.html" class="login-button">GO</a>
-
+                <button type="submit" class="login-button">GO</button>
                 <div class="footer">
-                    <a href="#">Not Registered?</a>
+                    <a href="#" onclick="showPopup(); return false;">Not Registered?</a>
                     <div class="library-login">
                         <a href="LibraryLogin.html">For library login, click here</a>
                     </div>
                 </div>
             </form>
         </div>
+        <div id="popup" class="popup" style="display:none;">
+            <p>Please ask a librarian to get registered.</p>
+            <button onclick="closePopup()">Close</button>
+        </div>
     </div>
+    <script>
+        function showPopup() {
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
