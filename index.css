@@ -62,7 +62,7 @@ body, html {
     box-sizing: border-box;
 }
 
-.login-button {
+/* .login-button {
     width: 100%;
     padding: 1em;
     background-color: red;
@@ -70,7 +70,41 @@ body, html {
     border: none;
     cursor: pointer;
     margin-bottom: 1em;
+} */
+
+
+
+.login-button {
+    display: block; /* Changed to block to fill the container */
+    width: calc(100% - 2em); /* Adjust width accounting for padding */
+    padding: 1em;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 1em;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box; /* This is crucial */
+    margin-left: auto;
+    margin-right: auto;
 }
+
+/* Add media queries if responsiveness is needed */
+@media (max-width) {
+    .login-button {
+        width: 100%; /* Full width on smaller screens */
+    }
+}
+
+.login-button:hover, .login-button:active {
+    background-color: darkred; /* Darker red on hover/active for feedback */
+}
+
+.login-button:focus {
+    outline: none; /* Optional: removes the outline on focus seen in some browsers */
+    background-color: darkred; /* Provides visual feedback on focus */
+}z
 
 .login-button:hover {
     background-color: darkred;
