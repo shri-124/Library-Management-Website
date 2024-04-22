@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/shrip/OneDrive/Desktop/480/cs480-s24-group-23",
-      "program": "c:/Users/shrip/OneDrive/Desktop/480/cs480-s24-group-23/build/Debug/outDebug",
+      "cwd": ".",
+      "program": "build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
