@@ -22,7 +22,7 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
-                <button type="submit" class="login-button">GO</button>
+                <button type="submit" class="login-button"onclick="login()">GO</button>
                 <div class="footer">
                     <a href="#" onclick="showPopup(); return false;">Not Registered?</a>
                     <div class="library-login">
@@ -36,14 +36,7 @@
             <button onclick="closePopup()">Close</button>
         </div>
     </div>
-    <script>
-        function showPopup() {
-            document.getElementById('popup').style.display = 'block';
-        }
 
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
-    </script>
+    <script src="login.js"></script>
 </body>
 </html>
