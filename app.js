@@ -35,10 +35,6 @@ client.connect()
 })
 .catch(e => {
   console.error("An error occurred:", e);
-})
-.finally(() => {
-  console.log("Closing the database connection.");
-  client.end();
 });
 
 module.exports = client

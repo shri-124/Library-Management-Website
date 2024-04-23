@@ -72,7 +72,9 @@
                 },
                 body: requestBody
             });
+            console.log('here')
             const data = await response.json();
+            console.log("data const" + JSON.stringify(data))
             if (data.authorized) {
                 document.getElementById('choiceModal').style.display = 'block';
             } else {
