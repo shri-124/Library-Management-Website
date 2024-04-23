@@ -10,6 +10,7 @@ const client = new Client({
 })
 
 
+
 // client.connect()
 // .then(() => console.log("Connected successfully"))
 // .then(() => client.query("select * from Document"))
@@ -18,10 +19,11 @@ const client = new Client({
 // .finally(() => client.end())
 
 
+
 client.connect()
 .then(() => {
   console.log("Connected successfully");
-  return client.query('SELECT * FROM document'); // Notice the double quotes
+  return client.query('SELECT * FROM librarian'); // Notice the double quotes
 })
 .then(results => {
   console.log("Query executed, processing results...");
