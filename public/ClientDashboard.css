@@ -37,12 +37,23 @@ section {
     width: 40%;
 }
 
+section.checked-out {
+    max-height: 400px; /* Limits the height of the checked-out section */
+    overflow-y: auto; /* Adds a scrollbar if content exceeds 400px */
+}
+
 section h2 {
     background: #555; /* Dark background for the section header */
     color: #fff; /* White text for contrast */
     padding: 10px; /* Padding for the header */
     border-radius: 3px; /* Rounded corners for the header */
 }
+
+section.available-books {
+    max-height: 400px; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling when necessary */
+}
+
 
 footer {
     text-align: center;
@@ -59,6 +70,8 @@ ul {
     padding: 0; /* Remove default padding */
     margin: 0; /* Align with the container's edge */
 }
+
+
 
 li {
     background: #f9f9f9; /* Light background for each list item */
@@ -90,4 +103,27 @@ li {
 
 #search-button:hover {
     background-color: #666; /* Slightly lighter on hover for feedback */
+}
+
+.book-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.title {
+    /* font-weight: bold; */
+}
+
+.due-date {
+    color: #888;
+    font-style: italic;
+    text-align: right;
+}
+
+.copies {
+    color: #888;
+    font-style: italic;
+    text-align: right;
 }
