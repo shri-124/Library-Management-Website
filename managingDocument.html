@@ -4,47 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Management</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="librarian-dashboard.css">
 </head>
 <body>
     <div class="main-container">
         <h1 class="library-title">Document Management</h1>
         <div class="form-container">
-            <h2>Manage Documents</h2>
-            <form class="document-form">
-                <div class="input-group">
-                    <label for="document-title">Document Title:</label>
-                    <input type="text" id="document-title" name="document-title" required>
-                </div>
-                <div class="input-group">
-                    <label for="copies">Number of Copies:</label>
-                    <input type="number" id="copies" name="copies" required>
-                </div>
-                <div class="action-buttons">
-                    <button type="submit" class="btn" onclick="return insertDocument()">Insert New Document</button>
-                    <button type="submit" class="btn" onclick="return updateDocument()">Update Document</button>
-                    <button type="button" class="btn" onclick="deleteCopies()">Delete Copies</button>
-                </div>
-            </form>
+            <!-- Insert New Document Section -->
+            <section class="document-section">
+                <h2>Insert New Document</h2>
+                <form class="document-form">
+                    <div class="input-group">
+                        <label for="insert-title">Document Title:</label>
+                        <input type="text" id="insert-title" name="insert-title" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="insert-copies">Number of Copies:</label>
+                        <input type="number" id="insert-copies" name="insert-copies" required>
+                    </div>
+                    <button type="button" onclick="insertDocument()">Insert Document</button>
+                </form>
+            </section>
+            <!-- Update Existing Document Section -->
+            <section class="document-section">
+                <h2>Update Existing Document</h2>
+                <form class="document-form">
+                    <div class="input-group">
+                        <label for="update-title">Document Title:</label>
+                        <input type="text" id="update-title" name="update-title" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="update-copies">Number of Copies:</label>
+                        <input type="number" id="update-copies" name="update-copies" required>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="button" onclick="updateDocument()">Update Document</button>
+                        <button type="button" onclick="deleteCopies()">Delete Copies</button>
+                    </div>
+                </form>
+            </section>
         </div>
     </div>
 
     <script>
         function insertDocument() {
-            // JavaScript function to insert a new document
             alert('Inserting new document...');
-            return false; // Prevent form submission for demonstration
         }
 
         function updateDocument() {
-            // JavaScript function to update an existing document
             alert('Updating document...');
-            return false; // Prevent form submission for demonstration
         }
 
         function deleteCopies() {
-            // JavaScript function to delete document copies
-            alert('Deleting document copies...');
+            const title = document.getElementById('update-title').value;
+            if (!title) {
+                alert('Please specify the document title to update.');
+                return;
+            }
+            document.getElementById('update-copies').value = 0;
+            alert('Setting number of copies to zero for: ' + title);
         }
     </script>
 </body>

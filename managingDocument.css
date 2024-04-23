@@ -1,31 +1,72 @@
-/* Additional styles for document management page */
-
-.form-container {
-    background: #fff;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    width: 50%;
-    margin: 20px auto;
-    position: relative;
+body, html {
+    font-family: 'Arial', sans-serif;
+    background-color: #eee;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-.document-form {
-    display: flex;
-    flex-direction: column;
+.main-container {
+    width: 80%;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.form-container {
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.document-section {
+    background-color: #f8f8f8;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.document-section h2 {
+    color: #333;
+    text-align: center;
 }
 
 .input-group {
-    margin-bottom: 10px;
+    margin: 10px 0;
 }
 
 .input-group label {
-    margin-bottom: 5px;
     display: block;
+    color: #666;
+    margin-bottom: 5px;
 }
 
-.action-buttons button {
+input[type="text"], input[type="number"], input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 20px;
     background-color: red;
     color: white;
     border: none;
-   
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 4px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: darkred;
 }
