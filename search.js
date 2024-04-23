@@ -14,10 +14,12 @@ const commonWords = [
     "YOU'RE", "YOU'VE", "YOUR", "YOURS", "YOURSELF", "YOURSELVES"
 ];
 
-
-
 function submitSearch() {
     var searchInput = document.getElementById('search-input');
+    if (searchInput.value == "") {
+        loadAvailableBooks();
+        return;
+    }
     alert(searchInput.value);
     const words = searchInput.value.split(' ');
     let sqlQuery = "SELECT * FROM documents WHERE ";
