@@ -5,6 +5,7 @@ const path = require('path');
 const pool = require('./app');
 
 
+
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
 
