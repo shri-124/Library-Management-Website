@@ -8,13 +8,6 @@ const pool = require('./app');
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
 
-// Database connection
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//         rejectUnauthorized: false
-//     }
-// });
 
 
 // Serve static files from the 'public' directory
@@ -66,9 +59,28 @@ app.post('/verify-librarian', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-// app.post('/verify-librarian', async (req, res) => {
-//     res.json({ authorized: false });  // Temporarily bypass actual logic
-// });
+
+
+app.post('/verify-client', async (req, res) => {
+    const { ssn, email } = req.body;
+    const query = `
+        SELECT "SSN", "Email"
+        FROM public.librarian
+        WHERE "SSN" = $1 AND "Email" = $2;
+    `;
+    try {
+        const result = await pool.query(query, [ssn, email]);
+        if (result.rows.length > 0) {
+            res.json({ authorized: true });
+        } else {
+            console.log('error in search.js')
+            res.status(401).json({ authorized: false });
+        }
+    } catch (err) {
+        console.error('Database query error', err.stack);
+        res.status(500).send('Server Error');
+    }
+});
 
 
 const PORT = process.env.PORT || 3000;
