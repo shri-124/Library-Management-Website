@@ -1,3 +1,17 @@
+let availableBooks = [
+    { title: "Pride and Prejudice", copies: 3 },
+    { title: "1984", copies: 2 },
+    { title: "The Catcher in the Rye", copies: 1 }
+];
+
+let checkedOutBooks = [
+    { title: "The Great Gatsby", dueDate: "April 30, 2024" },
+    { title: "To Kill a Mockingbird", dueDate: "May 15, 2024" },
+    { title: "Pride and Prejudice", dueDate: "May 16, 2024" }
+];
+
+let selectedBook = null;
+
 function showOptions(bookElement) {
     selectedBook = bookElement;
     document.getElementById('modal').style.display = 'block';
@@ -14,12 +28,15 @@ function returnBook() {
         return; // Exit the function if the title element is not found
     }
     const title = titleElement.textContent.trim();
+    alert("title clicked on is " + title);
     const bookEntries = document.querySelectorAll('.available-books .book-entry');
 
     let found = false;
     bookEntries.forEach(entry => {
         const bookTitleElement = entry.querySelector('.title');
         if (bookTitleElement && bookTitleElement.textContent.trim() === title) {
+            alert("found");
+            alert(title);
             const copiesCount = entry.querySelector('.copies');
             if (copiesCount) {
                 const matches = copiesCount.textContent.match(/\d+/); // Get the first match for digits
@@ -67,6 +84,10 @@ function checkOutBook() {
     }
     const title = titleElement.textContent.trim();
     const copiesElement = selectedBook.querySelector('.copies');
+    if (!copiesElement) {
+        alert('Copies element not found:', selectedBook);
+        return; // Exit if no copies element found
+    }
     const copies = parseInt(copiesElement.textContent.match(/\d+/)[0]);
 
     if (copies <= 0) {
@@ -115,6 +136,21 @@ function calculateDueDate() {
     return formattedDate; // Return the formatted date string
 }
 
+function loadCheckedOutBooks() {
+    const booksList = document.querySelector('.checked-out ul');
+    booksList.innerHTML = ''; // Clear any existing list items
+
+    checkedOutBooks.forEach(book => {
+        const li = document.createElement('li');
+        li.innerHTML = `<div class="book-entry">
+            <span class="title">${book.title}</span>
+            <span class="due-date">Due back: ${book.dueDate}</span>
+        </div>`;
+        booksList.onclick = () => showOptions(li);
+        booksList.appendChild(li);
+    });
+}
+
 function loadAvailableBooks() {
     const booksList = document.querySelector('.available-books ul');
     booksList.innerHTML = ''; // Clear existing list items
@@ -129,3 +165,18 @@ function loadAvailableBooks() {
         booksList.appendChild(li);
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadCheckedOutBooks();
+});
+
+// function showCheckoutOptions(bookElement) {
+//     selectedBook = bookElement;
+//     console.log(selectedBook.innerHTML); // This should show the inner HTML of the clicked book element.
+//     document.getElementById('modal').style.display = 'block';
+// }
+
+// newLi.onclick = () => {
+//     selectedBook = newLi;
+//     showCheckoutOptions();
+// };

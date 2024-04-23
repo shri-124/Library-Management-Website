@@ -14,34 +14,6 @@ const commonWords = [
     "YOU'RE", "YOU'VE", "YOUR", "YOURS", "YOURSELF", "YOURSELVES"
 ];
 
-let availableBooks = [
-    { title: "Pride and Prejudice", copies: 3 },
-    { title: "1984", copies: 2 },
-    { title: "The Catcher in the Rye", copies: 1 }
-];
-
-let checkedOutBooks = [
-    { title: "The Great Gatsby", dueDate: "April 30, 2024" },
-    { title: "To Kill a Mockingbird", dueDate: "May 15, 2024" },
-    { title: "Pride and Prejudice", dueDate: "May 16, 2024" }
-];
-
-function loadCheckedOutBooks() {
-    const booksList = document.querySelector('.checked-out ul');
-    booksList.innerHTML = ''; // Clear any existing list items
-
-    checkedOutBooks.forEach(book => {
-        const li = document.createElement('li');
-        li.innerHTML = `<div class="book-entry">
-            <span class="title">${book.title}</span>
-            <span class="due-date">Due back: ${book.dueDate}</span>
-        </div>`;
-        booksList.appendChild(li);
-    });
-}
-
-
-
 function submitSearch() {
     var searchInput = document.getElementById('search-input');
     if (searchInput.value == "") {
@@ -101,7 +73,3 @@ function submitSearch() {
 
     alert(sqlQuery);
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    loadCheckedOutBooks();
-});
