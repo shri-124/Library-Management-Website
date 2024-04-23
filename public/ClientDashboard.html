@@ -50,25 +50,28 @@
                 <button id="search-button" type="button" onclick="submitSearch()">Submit</button>    
             </div>
             <ul>
-                <li>
+                <!-- Books will be dynamically loaded here -->
+            </ul>
+            <!-- <ul>
+                <li onclick="showCheckoutOptions(this)">
                     <div class="book-entry">
                         <span class="title">Pride and Prejudice</span>
                         <span class="copies">copies: 1</span>
                     </div>
                 </li>
-                <li>
+                <li onclick="showCheckoutOptions(this)">
                     <div class="book-entry">
                         <span class="title">1984</span>
                         <span class="copies">copies: 3</span>
                     </div>
                 </li>
-                <li>
+                <li onclick="showCheckoutOptions(this)">
                     <div class="book-entry">
                         <span class="title">The Catcher in the Ryes</span>
                         <span class="copies">copies: 2</span>
                     </div>
                 </li>
-            </ul>
+            </ul> -->
         </section>
         <div id="modal" style="display:none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
             <div style="background: white; width: 300px; margin: 100px auto; padding: 20px; text-align: center;">
@@ -77,11 +80,18 @@
                 <button onclick="hideModal()">Cancel</button>
             </div>
         </div>
+        <div id="checkoutModal" style="display:none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+            <div style="background: white; width: 300px; margin: 100px auto; padding: 20px; text-align: center;">
+                <p>Do you want to check out this book?</p>
+                <button onclick="checkOutBook()">Check Out</button>
+                <button onclick="hideCheckoutModal()">Cancel</button>
+            </div>
+        </div>
     </main>
     <footer>
         <p>Library System - All rights reserved</p>
     </footer>
-    <script src="search.js"></script>
-    <script src="CheckOutBooks.js"></script>
+    <script src="..\search.js"></script>
+    <script src="..\CheckOutBooks.js"></script>
 </body>
 </html>
