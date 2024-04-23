@@ -20,7 +20,7 @@ app.get('/login', (req, res) => {
 
 // Route to serve the libraryLogin.html file specifically
 app.get('/librarylogin', (req, res) => {
-    res.sendFile("./public/libraryLogin.html", {root:__dirname});
+    res.sendFile("./public/LibraryLogin.html", {root:__dirname});
 });
 
 // Route to managing documents
@@ -35,8 +35,9 @@ app.get('/libdash', (req, res) => {
 
 // Route to client page
 app.get('/client', (req, res) => {
-    res.sendFile("./public/librarian-dashboard.html", {root:__dirname});
+    res.sendFile("./public/ClientDashboard.html", {root:__dirname});
 });
+
 
 // Verify librarian route
 app.post('/verify-librarian', async (req, res) => {
@@ -62,14 +63,14 @@ app.post('/verify-librarian', async (req, res) => {
 
 
 app.post('/verify-client', async (req, res) => {
-    const { ssn, email } = req.body;
+    const { password, email } = req.body;
     const query = `
-        SELECT "SSN", "Email"
-        FROM public.librarian
-        WHERE "SSN" = $1 AND "Email" = $2;
+        SELECT "Password", "Email"
+        FROM public.client
+        WHERE "Password" = $1 AND "Email" = $2;
     `;
     try {
-        const result = await pool.query(query, [ssn, email]);
+        const result = await pool.query(query, [password, email]);
         if (result.rows.length > 0) {
             res.json({ authorized: true });
         } else {
