@@ -8,13 +8,6 @@ const pool = require('./app');
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
 
-// Database connection
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//         rejectUnauthorized: false
-//     }
-// });
 
 
 // Serve static files from the 'public' directory
@@ -66,9 +59,6 @@ app.post('/verify-librarian', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-// app.post('/verify-librarian', async (req, res) => {
-//     res.json({ authorized: false });  // Temporarily bypass actual logic
-// });
 
 
 const PORT = process.env.PORT || 3000;
