@@ -10,11 +10,12 @@ body, html {
 }
 
 .main-container {
-    width: 80%;
+    width: 80%; /* Adjust width as needed, 80% is typical for a balanced layout */
     padding: 20px;
     background: white;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 8px;
+    box-sizing: border-box; /* Ensures padding and border are included in width and height */
 }
 
 .form-container {
@@ -22,7 +23,7 @@ body, html {
     background: #fff;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     border-radius: 8px;
-    margin-top: 20px;
+    margin-top: 20px; /* Ensures consistent spacing above form container */
 }
 
 .document-section {
@@ -36,10 +37,11 @@ body, html {
 .document-section h2 {
     color: #333;
     text-align: center;
+    margin-bottom: 10px; /* Adds a little space below the header for visual separation */
 }
 
 .input-group {
-    margin: 1px 0;
+    margin: 10px 0; /* Adjusted from 1px to 10px for better visual separation */
 }
 
 .input-group label {
