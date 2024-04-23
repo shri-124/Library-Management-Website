@@ -13,7 +13,7 @@
             <div class="login-header">
                 <span class="login-title"><strong>CLIENT LOGIN</strong></span>
             </div>
-            <form class="login-form">
+            <form class="login-form" action="ClientDashboard.html" onsubmit="return login()">
                 <div class="input-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
@@ -22,7 +22,10 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
-                <button type="submit" class="login-button"onclick="login()">GO</button>
+                <form class="login-form" onsubmit="return login()">
+
+                <button type="submit" class="login-button">GO</button>
+                <form>
                 <div class="footer">
                     <a href="#" onclick="showPopup(); return false;">Not Registered?</a>
                     <div class="library-login">
