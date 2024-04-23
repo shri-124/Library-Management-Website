@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Online Library</title>
+    <link rel="stylesheet" href="/LibraryLogin.css">
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="library-title">Welcome to the Online Library</h1>
+        <div class="login-container">
+            <div class="login-header">
+                <span class="login-title"><strong>LIBRARIAN LOGIN</strong></span>
+            </div>
+            <form class="login-form" onsubmit="event.preventDefault(); openModal();">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-button">GO</button>
+                <div class="footer">
+                    <a href="index.html">Go back to Client Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="choiceModal" class="modal">
+        <div class="modal-content">
+            <h4>Choose an Option</h4>
+            <p>Select where you would like to go:</p>
+            <button onclick="window.location.href='librarian-dashboard.html';">Registration / Drop Client</button>
+            <button onclick="window.location.href='managingDocument.html';">Manage Documents</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+    <script src="server.js"></script>
+    <script>
+        // function openModal() {
+        //     var email = document.getElementById('email').value;
+        //     var password = document.getElementById('password').value;
+        //     if (verifyLibrarian(email, password)) {
+        //         document.getElementById('choiceModal').style.display = 'block';
+        //     } else {
+        //         alert("Access denied.");
+        //     }
+        // }
+        //     // document.getElementById('choiceModal').style.display = 'block';
+        
+
+        // function closeModal() {
+        //     document.getElementById('choiceModal').style.display = 'none';
+        // }
+        async function openModal() {
+        var email = document.getElementById('email').value;
+        var ssn = document.getElementById('password').value; // Since password is SSN
+        const requestBody = JSON.stringify({ ssn, email }); // Create a JSON string from an object
+
+        console.log(requestBody); // Log the body to the console
+
+        try {
+            const response = await fetch('/verify-librarian', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: requestBody
+            });
+            console.log('here')
+            const data = await response.json();
+            console.log("data const" + JSON.stringify(data))
+            if (data.authorized) {
+                document.getElementById('choiceModal').style.display = 'block';
+            } else {
+                alert("Access denied.");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while trying to verify the credentials.');
+        }
+    }
+
+
+
+        function closeModal() {
+            document.getElementById('choiceModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

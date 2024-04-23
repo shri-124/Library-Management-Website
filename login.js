@@ -1,20 +1,17 @@
-function showPopup() {
-    document.getElementById('popup').style.display = 'block';
-}
-
-function closePopup() {
-    document.getElementById('popup').style.display = 'none';
-}
-
-
 function login() {
+    event.preventDefault();  // Prevent the default form submission behavior
+
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
 
-    // For demonstration purpose, output the email and password (you can remove this in actual use)
-    console.log('Email:', email);
-    console.log('Password:', password);
+    var emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if (!emailPattern.test(email)) {
+        alert('Please enter a valid email address.');
+        return false;  // Stop here if validation fails
+    }
 
-    // Redirect to ClientDashboard.html
-    window.location.href = 'ClientDashboard.html';
+  
+    // If all checks pass, you can submit the form programmatically:
+    document.querySelector('.login-form').submit();
+    return true;
 }
