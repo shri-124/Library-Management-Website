@@ -2,18 +2,19 @@ const express = require('express');
 const { Pool } = require('pg');
 require('dotenv').config();
 const path = require('path');
+const pool = require('./app');
 
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
 
 // Database connection
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
+// const pool = new Pool({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//         rejectUnauthorized: false
+//     }
+// });
 
 
 // Serve static files from the 'public' directory
@@ -57,6 +58,7 @@ app.post('/verify-librarian', async (req, res) => {
         if (result.rows.length > 0) {
             res.json({ authorized: true });
         } else {
+            console.log('error in search.js')
             res.status(401).json({ authorized: false });
         }
     } catch (err) {
