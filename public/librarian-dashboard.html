@@ -3,42 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Librarian Dashboard</title>
+    <title>Client Management Dashboard</title>
     <link rel="stylesheet" href="librarian-dashboard.css">
 </head>
 <body>
     <div class="main-container">
-        <h1>Librarian Dashboard</h1>
+        <h1>Client Management Dashboard</h1>
         
+        <!-- Registration Section -->
         <div class="form-container">
             <h2>Register New Client</h2>
             <form id="registrationForm">
                 <input type="text" id="name" name="name" placeholder="Client Name" required>
-                <input type="email" id="email" name="email" placeholder="Email Address" required>
-                <input type="text" id="address" name="address" placeholder="Address" required>
-                <input type="text" id="payment-info" name="payment-info" placeholder="Payment Information">
-                <button type="submit">Register Client</button>
+                <input type="text" id="email" name="email" placeholder="Email Address" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <label> Credit Card Numbers </label>
+                <input type="text" id="cardNumber" name="cardNumber" placeholder="Credit Card Number" required>
+                <label> Payment Addresses </label>
+                <input type="text" id="paymentAddress" name="paymentAddress" placeholder="Payment Address" required>
+                <!-- <input type="number" id="numCards" name="numCards" placeholder="Number of Credit Cards" min="1" required> -->
+
+                <!-- Container for Credit Card Details -->
+                <div id="creditCardDetails">
+                    <!-- Credit card detail fields will be added here by JavaScript -->
+                </div>
+
+                <button type="submit" onclick="registerClient()">Register Client</button>
             </form>
         </div>
 
+        <!-- Update Section -->
         <div class="form-container">
             <h2>Update Client Information</h2>
             <form id="updateForm">
-                <input type="text" id="client-id" name="client-id" placeholder="Client ID" required>
+                <input type="text" id="email-info" name="email" placeholder="Email Address">
                 <input type="text" id="update-name" name="update-name" placeholder="New Name">
-                <input type="text" id="update-address" name="update-address" placeholder="New Address">
-                <input type="text" id="update-payment-info" name="update-payment-info" placeholder="New Payment Info">
-                <button type="submit">Update Client</button>
+                
+                <fieldset>
+                    <legend>New Payment Information</legend>
+                    <input type="text" id="old-credit-card-number" name="old-credit-card-number" placeholder="Old Credit Card Number">
+                    <input type="text" id="update-credit-card-number" name="update-credit-card-number" placeholder="New Credit Card Number">
+                    <input type="text" id="update-payment-address" name="update-payment-address" placeholder="New Payment Address">
+                </fieldset>
+
+                <button type="submit" onclick="updateClient()">Update Client</button>
             </form>
         </div>
 
+        <!-- Delete Section -->
         <div class="form-container">
             <h2>Delete Client</h2>
             <form id="deleteForm">
-                <input type="text" id="delete-client-id" name="delete-client-id" placeholder="Client ID" required>
+                <input type="text" id="delete-client-email" name="delete-email" placeholder="Client Email" required>
                 <button type="submit">Delete Client</button>
             </form>
         </div>
     </div>
+
+    <script>
+        // document.querySelector('.home-button').onclick = function() {
+        //     window.location.href = 'index.html';
+        // };
+    </script>
+        <script src="registration.js"></script>
+
 </body>
 </html>
