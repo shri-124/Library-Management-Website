@@ -36,6 +36,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         const result = await response.json();
 
         if (response.ok && result.authorized) {
+            sessionStorage.setItem('clientEmail', email); // Save email to sessionStorage
             window.location.href = 'ClientDashboard.html'; // Redirect on successful login
         } else {
             alert('Invalid email or password. Please try again.');
