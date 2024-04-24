@@ -28,15 +28,12 @@ function returnBook() {
         return; // Exit the function if the title element is not found
     }
     const title = titleElement.textContent.trim();
-    alert("title clicked on is " + title);
     const bookEntries = document.querySelectorAll('.available-books .book-entry');
 
     let found = false;
     bookEntries.forEach(entry => {
         const bookTitleElement = entry.querySelector('.title');
         if (bookTitleElement && bookTitleElement.textContent.trim() === title) {
-            alert("found");
-            alert(title);
             const copiesCount = entry.querySelector('.copies');
             if (copiesCount) {
                 const matches = copiesCount.textContent.match(/\d+/); // Get the first match for digits
@@ -146,7 +143,7 @@ function loadCheckedOutBooks() {
             <span class="title">${book.title}</span>
             <span class="due-date">Due back: ${book.dueDate}</span>
         </div>`;
-        booksList.onclick = () => showOptions(li);
+        li.onclick = () => showOptions(li);
         booksList.appendChild(li);
     });
 }
