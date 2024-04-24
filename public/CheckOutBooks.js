@@ -1,16 +1,17 @@
-let availableBooks = [
-    { title: "Pride and Prejudice", copies: 3 },
-    { title: "1984", copies: 2 },
-    { title: "The Catcher in the Rye", copies: 1 }
-];
+// let availableBooks = [
+//     { title: "Pride and Prejudice", copies: 3 },
+//     { title: "1984", copies: 2 },
+//     { title: "The Catcher in the Rye", copies: 1 }
+// ];
 
-let checkedOutBooks = [
-    { title: "The Great Gatsby", dueDate: "April 30, 2024" },
-    { title: "To Kill a Mockingbird", dueDate: "May 15, 2024" },
-    { title: "Pride and Prejudice", dueDate: "May 16, 2024" }
-];
+// let checkedOutBooks = [
+//     { title: "The Great Gatsby", dueDate: "April 30, 2024" },
+//     { title: "To Kill a Mockingbird", dueDate: "May 15, 2024" },
+//     { title: "Pride and Prejudice", dueDate: "May 16, 2024" }
+// ];
 
 let selectedBook = null;
+let clientEmail = '';
 
 function showOptions(bookElement) {
     selectedBook = bookElement;
@@ -21,31 +22,97 @@ function hideModal() {
     document.getElementById('modal').style.display = 'none';
 }
 
+// function returnBook() {
+//     const titleElement = selectedBook.querySelector('.title');
+//     if (!titleElement) {
+//         console.error('Title element not found:', selectedBook);
+//         return; // Exit the function if the title element is not found
+//     }
+//     const title = titleElement.textContent.trim();
+//     const bookEntries = document.querySelectorAll('.available-books .book-entry');
+
+//     let found = false;
+//     bookEntries.forEach(entry => {
+//         const bookTitleElement = entry.querySelector('.title');
+//         if (bookTitleElement && bookTitleElement.textContent.trim() === title) {
+//             const copiesCount = entry.querySelector('.copies');
+//             if (copiesCount) {
+//                 const matches = copiesCount.textContent.match(/\d+/); // Get the first match for digits
+//                 if (matches) {
+//                     const currentCopies = parseInt(matches[0], 10);
+//                     copiesCount.textContent = 'copies: ' + (currentCopies + 1);
+//                     found = true;
+//                 } else {
+//                     console.error('No numeric value found in copies text:', copiesCount.textContent);
+//                 }
+//             } else {
+//                 console.error('Copies element not found in entry:', entry);
+//             }
+//         }
+//     });
+
+//     if (!found) {
+//         const newLi = document.createElement('li');
+//         newLi.innerHTML = `<div class="book-entry">
+//             <span class="title">${title}</span>
+//             <span class="copies">copies: 1</span>
+//         </div>`;
+//         document.querySelector('.available-books ul').appendChild(newLi);
+//     }
+
+//     selectedBook.remove(); // Remove the book from the checked-out section
+//     hideModal();
+// }
+
 function returnBook() {
     const titleElement = selectedBook.querySelector('.title');
+    const documentID = selectedBook.getAttribute('data-document-id'); // Assuming document ID is stored as a data attribute
+
     if (!titleElement) {
         console.error('Title element not found:', selectedBook);
-        return; // Exit the function if the title element is not found
+        return;
     }
-    const title = titleElement.textContent.trim();
-    const bookEntries = document.querySelectorAll('.available-books .book-entry');
 
+    const title = titleElement.textContent.trim();
+
+    // Call the server to update the book's status
+    fetch('/return-book', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ documentID: documentID }) // Send document ID to the server
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateAvailableBooksUI(title); // Update UI to reflect the return
+            selectedBook.remove(); // Remove the book from the checked-out section
+            hideModal();
+        } else {
+            alert('Failed to return the book. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error returning the book:', error);
+    });
+}
+
+function updateAvailableBooksUI(title) {
+    const bookEntries = document.querySelectorAll('.available-books .book-entry');
     let found = false;
+
     bookEntries.forEach(entry => {
         const bookTitleElement = entry.querySelector('.title');
         if (bookTitleElement && bookTitleElement.textContent.trim() === title) {
             const copiesCount = entry.querySelector('.copies');
             if (copiesCount) {
-                const matches = copiesCount.textContent.match(/\d+/); // Get the first match for digits
+                const matches = copiesCount.textContent.match(/\d+/);
                 if (matches) {
                     const currentCopies = parseInt(matches[0], 10);
                     copiesCount.textContent = 'copies: ' + (currentCopies + 1);
                     found = true;
-                } else {
-                    console.error('No numeric value found in copies text:', copiesCount.textContent);
                 }
-            } else {
-                console.error('Copies element not found in entry:', entry);
             }
         }
     });
@@ -58,10 +125,8 @@ function returnBook() {
         </div>`;
         document.querySelector('.available-books ul').appendChild(newLi);
     }
-
-    selectedBook.remove(); // Remove the book from the checked-out section
-    hideModal();
 }
+
 
 
 function showCheckoutOptions(bookElement) {
@@ -133,39 +198,106 @@ function calculateDueDate() {
     return formattedDate; // Return the formatted date string
 }
 
-function loadCheckedOutBooks() {
+// function loadCheckedOutBooks() {
+//     const booksList = document.querySelector('.checked-out ul');
+//     booksList.innerHTML = ''; // Clear any existing list items
+
+//     checkedOutBooks.forEach(book => {
+//         const li = document.createElement('li');
+//         li.innerHTML = `<div class="book-entry">
+//             <span class="title">${book.title}</span>
+//             <span class="due-date">Due back: ${book.dueDate}</span>
+//         </div>`;
+//         li.onclick = () => showOptions(li);
+//         booksList.appendChild(li);
+//     });
+// }
+
+async function loadCheckedOutBooks(clientEmail) {
     const booksList = document.querySelector('.checked-out ul');
     booksList.innerHTML = ''; // Clear any existing list items
 
-    checkedOutBooks.forEach(book => {
-        const li = document.createElement('li');
-        li.innerHTML = `<div class="book-entry">
-            <span class="title">${book.title}</span>
-            <span class="due-date">Due back: ${book.dueDate}</span>
-        </div>`;
-        li.onclick = () => showOptions(li);
-        booksList.appendChild(li);
-    });
+    try {
+        const response = await fetch(`/checked-out-books/${clientEmail}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const checkedOutBooks = await response.json();
+        console.log('Received checked-out books:', checkedOutBooks); // Log the JSON data
+
+        if (checkedOutBooks.length === 0) {
+            booksList.innerHTML = '<li>No books checked out.</li>';
+        }
+
+        checkedOutBooks.forEach(book => {
+            const li = document.createElement('li');
+            li.innerHTML = `<div class="book-entry">
+                <span class="title">${book.title}</span>
+                <span class="due-date">Due back: ${new Date(book.lenddate).toLocaleDateString()}</span>
+            </div>`;
+            li.onclick = () => showOptions(li);
+            booksList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Failed to load checked-out books:', error);
+        booksList.innerHTML = '<li>Error loading books.</li>';
+    }
 }
 
-function loadAvailableBooks() {
+
+// function loadAvailableBooks() {
+//     const booksList = document.querySelector('.available-books ul');
+//     booksList.innerHTML = ''; // Clear existing list items
+
+//     availableBooks.forEach(book => {
+//         const li = document.createElement('li');
+//         li.innerHTML = `<div class="book-entry">
+//             <span class="title">${book.title}</span>
+//             <span class="copies">copies: ${book.copies}</span>
+//         </div>`;
+//         li.onclick = () => showCheckoutOptions(li); // Attach the checkout function
+//         booksList.appendChild(li);
+//     });
+// }
+
+async function loadAvailableBooks() {
     const booksList = document.querySelector('.available-books ul');
     booksList.innerHTML = ''; // Clear existing list items
 
-    availableBooks.forEach(book => {
-        const li = document.createElement('li');
-        li.innerHTML = `<div class="book-entry">
-            <span class="title">${book.title}</span>
-            <span class="copies">copies: ${book.copies}</span>
-        </div>`;
-        li.onclick = () => showCheckoutOptions(li); // Attach the checkout function
-        booksList.appendChild(li);
-    });
+    try {
+        const response = await fetch('/available-books');
+        const availableBooks = await response.json();
+
+        availableBooks.forEach(book => {
+            const li = document.createElement('li');
+            li.innerHTML = `<div class="book-entry">
+                <span class="title">${book.title}</span>
+                <span class="copies">copies: ${book.copies}</span>
+            </div>`;
+            li.onclick = () => showCheckoutOptions(li); // Attach the checkout function
+            booksList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Failed to load available books:', error);
+        booksList.innerHTML = '<li>Error loading books.</li>';
+    }
 }
 
+// document.addEventListener('DOMContentLoaded', function() {
+//     loadCheckedOutBooks();
+// });
+
 document.addEventListener('DOMContentLoaded', function() {
-    loadCheckedOutBooks();
+    const clientEmail = sessionStorage.getItem('clientEmail'); // Retrieve the email from sessionStorage
+    if (clientEmail) {
+        loadCheckedOutBooks(clientEmail);
+    } else {
+        alert('No client email found');
+    }
+
 });
+
+
 
 // function showCheckoutOptions(bookElement) {
 //     selectedBook = bookElement;

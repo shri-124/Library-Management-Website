@@ -83,6 +83,70 @@ app.post('/verify-client', async (req, res) => {
     }
 });
 
+// Route to fetch available books
+app.get('/available-books', async (req, res) => {
+    const query = `
+        SELECT b.DocumentID, COALESCE(b.Title, m.Title, j.Title) AS Title, COUNT(c.CopyID) AS Copies
+        FROM public.copy_of_document c
+        LEFT JOIN public.book b ON c.DocumentID = b.DocumentID
+        LEFT JOIN public.magazine m ON c.DocumentID = m.DocumentID
+        LEFT JOIN public.journal_article j ON c.DocumentID = j.DocumentID
+        WHERE c.Status = false
+        GROUP BY b.DocumentID, m.Title, j.Title, b.Title
+        ORDER BY b.DocumentID;
+    `;
+    try {
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error fetching available books');
+    }
+});
+
+
+// Route to fetch checked-out books for a specific client
+app.get('/checked-out-books/:email', async (req, res) => {
+    const clientEmail = req.params.email; // get the email from URL parameter
+    const query = `
+        SELECT c.DocumentID, COALESCE(b.Title, m.Title, j.Title) AS Title, c.LendDate
+        FROM public.copy_of_document c
+        LEFT JOIN public.book b ON c.DocumentID = b.DocumentID
+        LEFT JOIN public.magazine m ON c.DocumentID = m.DocumentID
+        LEFT JOIN public.journal_article j ON c.DocumentID = j.DocumentID
+        WHERE c.Status = true AND c.ClientEmail = $1
+        ORDER BY c.LendDate;
+    `;
+    try {
+        const result = await pool.query(query, [clientEmail]);
+        // console.log('Fetching checked-out books for:', clientEmail);
+        // console.log('Query results:', result.rows); // Log the actual results from the query
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error executing query', error);
+        // res.status(500).send('Error fetching checked-out books');
+        res.status(500).json({error: 'Error fetching checked-out books', details: error.message});
+    }
+});
+
+app.post('/return-book', async (req, res) => {
+    const { documentID } = req.body;
+    const query = `
+        UPDATE public.copy_of_document
+        SET Status = false, ClientEmail = NULL
+        WHERE DocumentID = $1 AND Status = true
+        LIMIT 1;  // Update only one record
+    `;
+
+    try {
+        const result = await pool.query(query, [documentID]);
+        console.log('Query results:', result.rows); // Log the actual results from the query
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating document status', error);
+        res.status(500).json({ success: false });
+    }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
