@@ -219,9 +219,9 @@ app.post('/return-book', async (req, res) => {
     const { documentID } = req.body;
     const query = `
         UPDATE public.copy_of_document
-        SET Status = false, ClientEmail = NULL
-        WHERE DocumentID = $1 AND Status = true
-        LIMIT 1;  // Update only one record
+        SET status = false, clientemail = NULL
+        WHERE documentid = $1 AND status = true
+        LIMIT 1;
     `;
 
     try {
