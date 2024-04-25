@@ -1,7 +1,4 @@
 
-    
-
-
         async function registerClient() {
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
@@ -31,14 +28,14 @@
             } catch (error) {
                 // Handle any network or server errors
                 console.error('Error during registration:', error);
-                alert('Registration failed due to server error. Please try again later.');
+                alert('Email registered to given client already exists.');
             }
 
             const cardNumberInputs = document.getElementById('cardNumber').value;
             const paymentAddressInputs = document.getElementById('paymentAddress').value;
            
             const cardNumbers = cardNumberInputs.split(',').map(entry => entry.trim());
-            const paymentAddresses = paymentAddressInputs.split(',').map(entry => entry.trim());;
+            const paymentAddresses = paymentAddressInputs.split(',').map(entry => entry.trim())
 
             for (let i = 0; i < cardNumbers.length; i++) {
                 const cardNumber = cardNumbers[i];
@@ -76,80 +73,176 @@
             }   
         }
         
-        async function updateClient() {
-            const email = document.getElementById('email-info').value;
-            const name = document.getElementById('update-name').value;
-            const oldCreditCardNumber = document.getElementById('old-credit-card-number').value;
-            const newCreditCardNumber = document.getElementById('update-credit-card-number').value;
-            const newPaymentAddress = document.getElementById('update-payment-address').value;
+        // async function updateClient() {
+        //     // const email = document.getElementById('email-info').value;
+        //     // const name = document.getElementById('update-name').value;
+        //     // const oldCreditCardNumber = document.getElementById('old-credit-card-number').value;
+        //     // const newCreditCardNumber = document.getElementById('update-credit-card-number').value;
+        //     // const newPaymentAddress = document.getElementById('update-payment-address').value;
 
-            const cardNumbers = newCreditCardNumber.split(',').map(entry => entry.trim());
-            const paymentAddresses = newPaymentAddress.split(',').map(entry => entry.trim());;
+        //     // // const cardNumbers = newCreditCardNumber.split(',').map(entry => entry.trim());
+        //     // // const paymentAddresses = newPaymentAddress.split(',').map(entry => entry.trim());;
 
-            // try {
-            //     const response = await fetch('/updateClient', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         },
-            //         body: JSON.stringify({ 
-            //             email: email,
-            //             name: name
+        //     // if (oldCreditCardNumber != blank) {
+        //     //     access database for creditcard entered and delete that specific credit card.
+        //     // }
+
+        //     // if (newCreditCardNumber != blank && newPaymentAddress != blank) {
+        //     //     insert new creditcard number and its associated payment method into the database
+        //     // }
+
+
+        //     document.getElementById('updateClientForm').addEventListener('submit', function(event) {
+        //         event.preventDefault();  // Prevent the default form submission
+            
+        //         const email = document.getElementById('email').value;
+        //         const name = document.getElementById('name').value;
+        //         const oldCreditCardNumber = document.getElementById('oldCreditCardNumber').value;
+        //         const newCreditCardNumber = document.getElementById('newCreditCardNumber').value;
+        //         const newPaymentAddress = document.getElementById('newPaymentAddress').value;
+            
+        //         const data = {
+        //             email,
+        //             name,
+        //             oldCreditCardNumber,
+        //             newCreditCardNumber,
+        //             newPaymentAddress
+        //         };
+            
+        //         fetch('/updateClient', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             },
+        //             body: JSON.stringify(data)
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log('Success:', data);
+        //             alert('Client information updated successfully!');
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error:', error);
+        //             alert('Failed to update client information.');
+        //         });
+        //     });
+            
+
+
+
+        //     // try {
+        //     //     const response = await fetch('/updateClient', {
+        //     //         method: 'POST',
+        //     //         headers: {
+        //     //             'Content-Type': 'application/json'
+        //     //         },
+        //     //         body: JSON.stringify({ 
+        //     //             email: email,
+        //     //             name: name
                         
-            //         })
-            //     });
-            //     if (!response.ok) {
-            //         throw new Error("Registration failed. Please try again.");
-            //     }
-            //     const resp = await response.json();
-            //     console.log('Received: ', resp); // Log the JSON data
-            //     alert();
-            // } catch (error) {
-            //     // Handle any network or server errors
-            //     console.error('Error during registration:', error);
-            //     alert('Registration failed due to server error. Please try again later.');
-            // }
+        //     //         })
+        //     //     });
+        //     //     if (!response.ok) {
+        //     //         throw new Error("Registration failed. Please try again.");
+        //     //     }
+        //     //     const resp = await response.json();
+        //     //     console.log('Received: ', resp); // Log the JSON data
+        //     //     alert();
+        //     // } catch (error) {
+        //     //     // Handle any network or server errors
+        //     //     console.error('Error during registration:', error);
+        //     //     alert('Registration failed due to server error. Please try again later.');
+        //     // }
 
 
-            for (let i = 0; i < cardNumbers.length; i++) {
-                const cardnumber = cardNumbers[i];
-                const paymentAddress = paymentAddresses[i];
+        //     // for (let i = 0; i < cardNumbers.length; i++) {
+        //     //     const cardnumber = cardNumbers[i];
+        //     //     const paymentAddress = paymentAddresses[i];
 
+        //     //     try {
+        //     //         console.log('Sending update request with', { email, oldCreditCardNumber, cardnumber, paymentaddress });
+        //     //         const response = await fetch('/updateClientPayment', {
+        //     //             method: 'POST',
+        //     //             headers: {
+        //     //                 'Content-Type': 'application/json'
+        //     //             },
+        //     //             body: JSON.stringify({ 
+        //     //                 clientemail: email,
+        //     //                 oldCreditCardNumber: oldCreditCardNumber,
+        //     //                 cardnumber: cardnumber,
+        //     //                 paymentaddress: paymentAddress
+
+        //     //             })
+        //     //         });
+            
+        //     //         if (!response.ok) {
+        //     //             throw new Error("Registration failed. Please try again.");
+        //     //         }
+        //     //         const resp = await response.json();
+        //     //         console.log('Received: ', resp); // Log the JSON data
+        //     //     } catch (error) {
+        //     //         // Handle any network or server errors
+        //     //         console.error('Error during registration:', error);
+        //     //         alert('Registration failed due to server error. Please try again later.');
+        //     //     }
+
+
+        //     // }
+
+
+        // }
+
+
+        //     document.addEventListener('DOMContentLoaded', function() {
+        //         //registerClient();
+
+        //     });
+
+
+        async function updateClient() {
+            // document.getElementById('updateClientForm').addEventListener('submit', async function(event) {
+                // event.preventDefault();  // Prevent the default form submission
+        
+                const email = document.getElementById('email-info').value;
+                const name = document.getElementById('update-name').value;
+                const oldCreditCardNumber = document.getElementById('old-credit-card-number').value;
+                const newCreditCardNumber = document.getElementById('update-credit-card-number').value;
+                const newPaymentAddress = document.getElementById('update-payment-address').value;
+                
+                console.log(email, name); // This should now log the input correctly.
+        
+                const data = {
+                    email,
+                    name,
+                    oldCreditCardNumber,
+                    newCreditCardNumber,
+                    newPaymentAddress
+                };
+                
                 try {
-                    console.log('Sending update request with', { email, oldCreditCardNumber, cardnumber, paymentaddress });
-                    const response = await fetch('/updateClientPayment', {
+                    const response = await fetch('/updateClient', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ 
-                            clientemail: email,
-                            oldCreditCardNumber: oldCreditCardNumber,
-                            cardnumber: cardnumber,
-                            paymentaddress: paymentAddress
-
-                        })
+                        body: JSON.stringify(data)
                     });
-            
+        
                     if (!response.ok) {
-                        throw new Error("Registration failed. Please try again.");
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    const resp = await response.json();
-                    console.log('Received: ', resp); // Log the JSON data
+        
+                    const result = await response.json();
+                    console.log('Success:', result);
+                    alert('Client information updated successfully!');
                 } catch (error) {
-                    // Handle any network or server errors
-                    console.error('Error during registration:', error);
-                    alert('Registration failed due to server error. Please try again later.');
+                    console.error('Error:', error);
+                    alert('Failed to update client information. ' + error.message);
                 }
-
-
-            }
-
-
+            // });
         }
-
-
-            document.addEventListener('DOMContentLoaded', function() {
-                //registerClient();
-
-            });
+        
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     updateClient(); // Ensure the updateClient function is set up after the page has loaded.
+        // });
+        
