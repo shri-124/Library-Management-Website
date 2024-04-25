@@ -123,26 +123,75 @@ app.post('/registerClientPayment', async (req, res) => {
     }
 });
 
-app.post('/updateClient', async (req, res) => {
-    console.log("Received request:", req.body); // Log the entire request body
+// app.post('/updateClient', async (req, res) => {
+//     console.log("Received request:", req.body); // Log the entire request body
 
-    const { email, name } = req.body;
+//     const { email, name } = req.body;
 
-    const query = `
-        UPDATE public.client
-        SET "Name" = $2
-        WHERE "Email" = $1
-    `;
+//     const query = `
+//         UPDATE public.client
+//         SET "Name" = $2
+//         WHERE "Email" = $1
+//     `;
     
+//     try {
+//         const result = await pool.query(query, [email, name]); 
+//         res.json({ success: true });
+//     } catch (error) {
+//         console.error('Error updating document status', error);
+//         res.status(500).json({ success: false, error: error.message });
+//     }
+// });
+
+app.post('/updateClient', async (req, res) => {
+    const { email, name, oldCreditCardNumber, newCreditCardNumber, newPaymentAddress } = req.body;
+    
+
+    // Start transaction
+    //const client = await pool.connect();
+    console.log("here is client info: " + email + name)
     try {
-        const result = await pool.query(query, [email, name]); 
+        await pool.query('BEGIN');
+
+        // Update client information
+        if (name) {
+            const updateClientQuery = `
+                UPDATE public.client
+                SET "Name" = $1
+                WHERE "Email" = $2;
+            `;
+            await pool.query(updateClientQuery, [name, email]);
+        }
+
+        // Delete old credit card if provided
+        if (oldCreditCardNumber) {
+            const deleteCardQuery = `
+                DELETE FROM public.credit_card
+                WHERE clientemail = $1 AND cardnumber = $2;
+            `;
+            await pool.query(deleteCardQuery, [email, oldCreditCardNumber]);
+        }
+
+        // Insert new credit card if provided
+        if (newCreditCardNumber && newPaymentAddress) {
+            const insertCardQuery = `
+                INSERT INTO public.credit_card (clientemail, cardnumber, paymentaddress)
+                VALUES ($1, $2, $3);
+            `;
+            await pool.query(insertCardQuery, [email, newCreditCardNumber, newPaymentAddress]);
+        }
+
+        await pool.query('COMMIT');
         res.json({ success: true });
     } catch (error) {
-        console.error('Error updating document status', error);
+        await pool.query('ROLLBACK');
+        console.error('Transaction failed', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
+
+// Delete this path later
 app.post('/updateClientPayment', async (req, res) => {
     console.log("Received request:", req.body); // Log the entire request body
 
