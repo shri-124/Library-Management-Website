@@ -153,3 +153,36 @@
                 //registerClient();
 
             });
+
+            async function deleteClient() {
+                const email = document.getElementById('delete-client-email').value;
+            
+                if (!email) {
+                    alert("Please provide an email address.");
+                    return;
+                }
+            
+                try {
+                    const response = await fetch('/delete-client', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email })
+                    });
+            
+                    const data = await response.json();
+            
+                    if (response.ok) {
+                        alert(data.message);
+                        // Optionally reset the form or perform other UI updates
+                        document.getElementById('deleteForm').reset();
+                    } else {
+                        throw new Error(data.message);
+                    }
+                } catch (error) {
+                    console.error('Failed to delete client:', error);
+                    alert('Failed to delete client: ' + error.message);
+                }
+            }
+            

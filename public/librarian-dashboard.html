@@ -9,6 +9,9 @@
 <body>
     <div class="main-container">
         <h1>Client Management Dashboard</h1>
+
+        <button onclick="window.location.href='index.html';" class="return-login-btn">Home</button>
+
         
         <!-- Registration Section -->
         <div class="form-container">
@@ -55,10 +58,12 @@
             <h2>Delete Client</h2>
             <form id="deleteForm">
                 <input type="text" id="delete-client-email" name="delete-email" placeholder="Client Email" required>
-                <button type="submit">Delete Client</button>
+                <button type="button" onclick="deleteClient()">Delete Client</button>
             </form>
         </div>
-    </div>
+        
+    
+
 
     <script>
         // document.querySelector('.home-button').onclick = function() {
