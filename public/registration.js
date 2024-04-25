@@ -241,7 +241,6 @@
                 }
             // });
         }
-<<<<<<< HEAD
 
 
             document.addEventListener('DOMContentLoaded', function() {
@@ -281,10 +280,9 @@
                 }
             }
             
-=======
+
         
         // document.addEventListener('DOMContentLoaded', function() {
         //     updateClient(); // Ensure the updateClient function is set up after the page has loaded.
         // });
         
->>>>>>> 7baac62c05017bb5ae836d596ee5eb5ebe878f6d
