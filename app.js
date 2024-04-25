@@ -11,15 +11,6 @@ const client = new Client({
 
 
 
-// client.connect()
-// .then(() => console.log("Connected successfully"))
-// .then(() => client.query("select * from Document"))
-// .then(results => console.table(results.rows))
-// .catch(e => console.log)
-// .finally(() => client.end())
-
-
-
 client.connect()
 .then(() => {
   console.log("Connected successfully");

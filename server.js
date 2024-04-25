@@ -3,7 +3,8 @@ const { Pool } = require('pg');
 require('dotenv').config();
 const path = require('path');
 const pool = require('./app');
-const { connectStorageEmulator } = require('firebase/storage');
+
+//const { connectStorageEmulator } = require('firebase/storage');
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
@@ -577,6 +578,68 @@ app.post('/delete-copies', async (req, res) => {
       res.status(500).json({ success: false, message: error.message });
     }
   });
+
+
+
+  app.post('/view-copies', async (req, res) => {
+    const query = `
+        SELECT 
+            c."Name", 
+            c."Email", 
+            d.title AS DocumentTitle,
+            'Book' AS DocumentType
+        FROM 
+            public.copy_of_document cod
+        JOIN 
+            public.book d ON cod.documentid = d.documentid
+        JOIN 
+            public.client c ON cod.clientemail = c."Email"
+        WHERE 
+            cod.status = TRUE
+
+        UNION ALL
+
+        SELECT 
+            c."Name", 
+            c."Email", 
+            m.title AS DocumentTitle,
+            'Magazine' AS DocumentType
+        FROM 
+            public.copy_of_document cod
+        JOIN 
+            public.magazine m ON cod.documentid = m.documentid
+        JOIN 
+            public.client c ON cod.clientemail = c."Email"
+        WHERE 
+            cod.status = TRUE
+
+        UNION ALL
+
+        SELECT 
+            c."Name", 
+            c."Email", 
+            j.title AS DocumentTitle,
+            'Journal' AS DocumentType
+        FROM 
+            public.copy_of_document cod
+        JOIN 
+            public.journal_article j ON cod.documentid = j.documentid
+        JOIN 
+            public.client c ON cod.clientemail = c."Email"
+        WHERE 
+            cod.status = TRUE;
+        `;
+
+
+    try {
+        const result = await pool.query(query);
+        console.log(result.rows)
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error executing query', error.stack);
+        res.status(500).send('Error fetching available books');
+    }
+});
 
 
 

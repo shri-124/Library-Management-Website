@@ -318,6 +318,49 @@ function deleteCopies() {
   }
 
   // Initialize fields on document load
-document.addEventListener('DOMContentLoaded', function() {
-    showDocumentFields(); // Call initially to set up the correct fields
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//     showDocumentFields(); // Call initially to set up the correct fields
+// });
+
+
+
+function viewCopiesLendOut() {
+    fetch('/view-copies', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.json()) // Make sure to handle the JSON response correctly
+    .then(data => {
+        if (data) {
+            displayCopies(data);
+        }
+    }).catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+    });
+}
+
+
+function displayCopies(data) {
+    const container = document.getElementById('view-results');
+    container.innerHTML = ''; // Clear previous results
+
+    data.forEach((item, index) => {
+        const entry = document.createElement('div');
+        entry.className = 'result-entry';
+        entry.innerHTML = `
+            <p><strong>Name:</strong> ${item.Name}</p>
+            <p><strong>Email:</strong> ${item.Email}</p>
+            <p><strong>Title:</strong> ${item.documenttitle}</p>
+            <p><strong>Type:</strong> ${item.documenttype}</p>
+        `;
+
+        container.appendChild(entry);
+
+        // Add a horizontal rule if it's not the last item
+        if (index !== data.length - 1) {
+            const separator = document.createElement('hr');
+            container.appendChild(separator);
+        }
+    });
+}
