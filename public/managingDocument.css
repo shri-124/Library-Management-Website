@@ -1,74 +1,46 @@
-body, html {
+body {
     font-family: 'Arial', sans-serif;
-    background-color: #eee;
+    background: #eee;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
 }
 
 .main-container {
-    width: 80%; /* Adjust width as needed, 80% is typical for a balanced layout */
-    padding: 20px;
+    width: auto; /* Adjust width as needed */
+    padding: 10px;
     background: white;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 8px;
-    box-sizing: border-box; /* Ensures padding and border are included in width and height */
+    margin: 10px;
 }
 
-.form-container {
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    margin-top: 20px; /* Ensures consistent spacing above form container */
-}
-
-.document-section {
-    background-color: #f8f8f8;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.document-section h2 {
-    color: #333;
+.library-title {
     text-align: center;
-    margin-bottom: 10px; /* Adds a little space below the header for visual separation */
 }
 
-.input-group {
-    margin: 10px 0; /* Adjusted from 1px to 10px for better visual separation */
-}
-
-.input-group label {
-    display: block;
-    color: #666;
-    margin-bottom: 5px;
-}
-
-input[type="text"], input[type="number"], input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+input[type="text"], input[type="email"], input[type="number"] {
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    margin-bottom: 5px;
+    width: 100%; /* Full width */
 }
 
 button {
-    padding: 10px 20px;
+    padding: 8px 16px;
     background-color: red;
     color: white;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
     border-radius: 4px;
-    width: 100%;
+    margin-top: 5px;
 }
 
 button:hover {
     background-color: darkred;
+}
+
+h2 {
+    padding-top: 10px; /* Spacing before each new form section */
 }
