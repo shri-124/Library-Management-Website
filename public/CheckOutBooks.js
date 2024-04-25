@@ -66,7 +66,7 @@ function hideModal() {
 
 function returnBook() {
     const titleElement = selectedBook.querySelector('.title');
-    const documentID = selectedBook.getAttribute('data-document-id'); // Assuming document ID is stored as a data attribute
+    const documentID = selectedBook.getAttribute('id');
 
     if (!titleElement) {
         console.error('Title element not found:', selectedBook);
@@ -81,7 +81,7 @@ function returnBook() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ documentID: documentID }) // Send document ID to the server
+        body: JSON.stringify({ documentID: documentID}) // Send document ID to the server
     })
     .then(response => response.json())
     .then(data => {
@@ -232,7 +232,7 @@ async function loadCheckedOutBooks(clientEmail) {
         checkedOutBooks.forEach(book => {
             const li = document.createElement('li');
             li.innerHTML = `<div class="book-entry">
-                <span class="title">${book.title}</span>
+                <span class="title" id="${book.documentid}">${book.title}</span>
                 <span class="due-date">Due back: ${new Date(book.lenddate).toLocaleDateString()}</span>
             </div>`;
             li.onclick = () => showOptions(li);
@@ -271,7 +271,7 @@ async function loadAvailableBooks() {
         availableBooks.forEach(book => {
             const li = document.createElement('li');
             li.innerHTML = `<div class="book-entry">
-                <span class="title">${book.title}</span>
+                <span class="title" id="${book.documentid}">${book.title}</span>
                 <span class="copies">copies: ${book.copies}</span>
             </div>`;
             li.onclick = () => showCheckoutOptions(li); // Attach the checkout function
