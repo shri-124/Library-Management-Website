@@ -4,66 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Management</title>
-    <link rel="stylesheet" href="librarian-dashboard.css">
+    <link rel="stylesheet" href="managingDocument.css">
 </head>
 <body>
     <div class="main-container">
         <h1 class="library-title">Document Management</h1>
+        
+       
         <div class="form-container">
-            <!-- Insert New Document Section -->
-            <section class="document-section">
-                <h2>Insert New Document</h2>
-                <form class="document-form">
-                    <div class="input-group">
-                        <label for="insert-title">Document Title:</label>
-                        <input type="text" id="insert-title" name="insert-title" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="insert-copies">Number of Copies:</label>
-                        <input type="number" id="insert-copies" name="insert-copies" required>
-                    </div>
-                    <button type="button" onclick="insertDocument()">Insert Document</button>
-                </form>
-            </section>
+            <!-- Book Document Section -->
+            <h2>Insert New Book</h2>
+            <form class="document-form" onsubmit="insertBook(); return false;">
+                <div class="input-group">
+                    <label for="book-title">Book Title:</label>
+                    <input type="text" id="book-title" name="book-title" required>
+                </div>
+                <div class="input-group">
+                    <label for="book-authors">Authors:</label>
+                    <input type="text" id="book-authors" name="book-authors" required>
+                </div>
+                <div class="input-group">
+                    <label for="book-isbn">ISBN:</label>
+                    <input type="text" id="book-isbn" name="book-isbn" required>
+                </div>
+                <div class="input-group">
+                    <label for="book-publisher">Publisher:</label>
+                    <input type="text" id="book-publisher" name="book-publisher" required>
+                </div>
+                <div class="input-group">
+                    <label for="book-year">Year:</label>
+                    <input type="text" id="book-year" name="book-year" required>
+                </div>
+                <div class="input-group">
+                    <label for="book-pages">Number of Pages:</label>
+                    <input type="text" id="book-pages" name="book-pages" required>
+                </div>
+                <div class="input-group">
+                    <label for="book-copies">Number of Copies:</label>
+                    <input type="number" id="book-copies" name="book-copies" required min="1">
+                </div>
+                <button type="submit">Insert Book</button>
+            </form>
+            <!-- Magazine Document Section -->
+            <h2>Insert New Magazine</h2>
+            <form class="document-form" onsubmit="insertMagazine(); return false;">
+                <div class="input-group">
+                    <label for="magazine-title">Magazine Title:</label>
+                    <input type="text" id="magazine-title" name="magazine-title" required>
+                </div>
+                <div class="input-group">
+                    <label for="magazine-isbn">ISBN:</label>
+                    <input type="text" id="magazine-isbn" name="magazine-isbn" required>
+                </div>
+                <div class="input-group">
+                    <label for="magazine-publisher">Publisher:</label>
+                    <input type="text" id="magazine-publisher" name="magazine-publisher" required>
+                </div>
+                <div class="input-group">
+                    <label for="magazine-year">Year:</label>
+                    <input type="text" id="magazine-year" name="magazine-year" required>
+                </div>
+                <div class="input-group">
+                    <label for="magazine-year">Month:</label>
+                    <input type="text" id="magazine-month" name="magazine-month" required>
+                </div>
+                <div class="input-group">
+                    <label for="magazine-copies">Number of Copies:</label>
+                    <input type="number" id="magazine-copies" name="magazine-copies" required min="1">
+                </div>
+                <button type="submit">Insert Magazine</button>
+            </form>
+            <!-- Journal Document Section -->
+            <h2>Insert New Journal</h2>
+            <form class="document-form" onsubmit="insertJournal(); return false;">
+                <div class="input-group">
+                    <label for="journal-title">Journal Title:</label>
+                    <input type="text" id="journal-title" name="journal-title" required>
+                </div>
+                <div class="input-group">
+                    <label for="journal-name">Name:</label>
+                    <input type="text" id="journal-name" name="journal-name" required>
+                </div>
+                <div class="input-group">
+                    <label for="journal-authors">Authors:</label>
+                    <input type="text" id="journal-authors" name="journal-authors" required>
+                </div>
+                <div class="input-group">
+                    <label for="journal-year">Year:</label>
+                    <input type="text" id="journal-year" name="journal-year" required>
+                </div>
+                <div class="input-group">
+                    <label for="journal-issue">Issue Number:</label>
+                    <input type="text" id="journal-issue" name="journal-issue" required>
+                </div>
+                <div class="input-group">
+                    <label for="journal-publisher">Publisher:</label>
+                    <input type="text" id="journal-publisher" name="journal-publisher" required>
+                </div>
+                <div class="input-group">
+                    <label for="journal-copies">Number of Copies:</label>
+                    <input type="number" id="journal-copies" name="journal-copies" required min="1">
+                </div>
+                <button type="submit">Insert Journal</button>
+            </form>
             <!-- Update Existing Document Section -->
             <section class="document-section">
                 <h2>Update Existing Document</h2>
+                <form class="document-form" id="update-document-form" onsubmit="updateDocument(event);">
+                    <div class="input-group">
+                        <label for="update-document-type">Type of Document:</label>
+                        <select id="update-document-type" name="update-document-type" required onchange="showDocumentFields()">
+                            <option value="book">Book</option>
+                            <option value="magazine">Magazine</option>
+                            <option value="journal">Journal</option>
+                        </select>
+                    </div>
+                    <div id="update-fields"></div>
+                    <div class="action-buttons">
+                        <button type="submit" class="update-button">Update Document</button>
+                    </div>
+                </form>
+            </section>
+            <!-- Delete Existing Document Section -->
+            <section class="document-section">
+                <h2>Delete Existing Document</h2>
                 <form class="document-form">
                     <div class="input-group">
-                        <label for="update-title">Document Title:</label>
-                        <input type="text" id="update-title" name="update-title" required>
+                        <label for="delete-title">Document Title:</label>
+                        <input type="text" id="delete-title" name="delete-title" required>
                     </div>
                     <div class="input-group">
-                        <label for="update-copies">Number of Copies:</label>
-                        <input type="number" id="update-copies" name="update-copies" required>
+                        <label for="delete-copies">Number of Copies:</label>
+                        <input type="number" id="delete-copies" name="delete-copies" required min="0">
                     </div>
+                    <div class="input-group">
+                        <label for="document-type">Type of Document:</label>
+                        <select id="document-type" name="document-type" required>
+                          <option value="book">Book</option>
+                          <option value="magazine">Magazine</option>
+                          <option value="journal">Journal</option>
+                        </select>
+                      </div>
                     <div class="action-buttons">
-                        <button type="button" onclick="updateDocument()">Update Document</button>
-                        <button type="button" onclick="deleteCopies()">Delete Copies</button>
+                        <button type="button" class="delete-button" onclick="deleteCopies()">Delete Copies</button>
                     </div>
                 </form>
             </section>
         </div>
+        
+
+        <!-- Scripts -->
+        <script src="manageDocument.js"></script>
     </div>
-
-    <script>
-        function insertDocument() {
-            alert('Inserting new document...');
-        }
-
-        function updateDocument() {
-            alert('Updating document...');
-        }
-
-        function deleteCopies() {
-            const title = document.getElementById('update-title').value;
-            if (!title) {
-                alert('Please specify the document title to update.');
-                return;
-            }
-            document.getElementById('update-copies').value = 0;
-            alert('Setting number of copies to zero for: ' + title);
-        }
-    </script>
+    
 </body>
 </html>

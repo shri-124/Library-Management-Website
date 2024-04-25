@@ -3,6 +3,7 @@ const { Pool } = require('pg');
 require('dotenv').config();
 const path = require('path');
 const pool = require('./app');
+const { connectStorageEmulator } = require('firebase/storage');
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
@@ -122,26 +123,6 @@ app.post('/registerClientPayment', async (req, res) => {
         res.status(500).json({ success: false });
     }
 });
-
-// app.post('/updateClient', async (req, res) => {
-//     console.log("Received request:", req.body); // Log the entire request body
-
-//     const { email, name } = req.body;
-
-//     const query = `
-//         UPDATE public.client
-//         SET "Name" = $2
-//         WHERE "Email" = $1
-//     `;
-    
-//     try {
-//         const result = await pool.query(query, [email, name]); 
-//         res.json({ success: true });
-//     } catch (error) {
-//         console.error('Error updating document status', error);
-//         res.status(500).json({ success: false, error: error.message });
-//     }
-// });
 
 app.post('/updateClient', async (req, res) => {
     const { email, name, oldCreditCardNumber, newCreditCardNumber, newPaymentAddress } = req.body;
@@ -332,12 +313,6 @@ app.post('/checkout-book', async (req, res) => {
     const { clientEmail, documentID } = req.body;
     console.log('clientEmail in server is ', clientEmail);
     console.log('documentID in server is ', documentID);
-    
-    // const query = `
-    //     UPDATE public.copy_of_document
-    //     SET status = true, clientemail = $1
-    //     WHERE documentid = $2 AND status = false
-    // `;
 
     const query = `
         WITH AvailableCopy AS (
@@ -357,18 +332,6 @@ app.post('/checkout-book', async (req, res) => {
         );
     `;
 
-    // const subQuery = `
-    //     SELECT copyid FROM public.copy_of_document
-    //     WHERE documentid = $2 AND status = false
-    //     LIMIT 1
-    // `;
-    
-    // const query = `
-    //     UPDATE public.copy_of_document
-    //     SET status = true, clientemail = $1
-    //     WHERE copyid = (${subQuery})
-    // `;
-
     console.log("Executing Query:", query);
     console.log("Parameters:", [clientEmail, documentID]);
 
@@ -384,6 +347,236 @@ app.post('/checkout-book', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error processing checkout.' });
     }
 });
+
+app.post('/insert-book', async (req, res) => {
+    const { title, authors, isbn, publisher, year, pages, copies } = req.body;
+
+    try {
+        await pool.query('BEGIN'); // Start a transaction
+
+        // Check if the title already exists in the book table
+        let query = 'SELECT DocumentID FROM public.book WHERE Title = $1';
+        let result = await pool.query(query, [title]);
+
+        let documentID;
+        if (result.rows.length > 0) {
+            // If the book already exists, use the existing DocumentID
+            documentID = result.rows[0].documentid;
+        } else {
+            // Get a new unique DocumentID from the sequence if the book doesn't exist
+            query = 'SELECT nextval(\'public.document_id_sequence\') AS newDocumentID';
+            result = await pool.query(query);
+            documentID = result.rows[0].newdocumentid;
+
+            // Insert new book with the new DocumentID
+            query = 'INSERT INTO public.book (DocumentID, Title, Authors, ISBN, Publisher, Year, NumberPages) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+            await pool.query(query, [documentID, title, authors, isbn, publisher, year, parseInt(pages)]);
+        }
+
+        // Insert the specified number of copies into the copy_of_document table
+        for (let i = 1; i <= copies; i++) {
+            let copyID = `C${String(i).padStart(3, '0')}`;
+            query = 'INSERT INTO public.copy_of_document (DocumentID, CopyID, Status) VALUES ($1, $2, false)';
+            await pool.query(query, [documentID, copyID]);
+        }
+
+        await pool.query('COMMIT'); // Commit the transaction
+        res.json({ success: true, message: "Document inserted successfully." });
+    } catch (error) {
+        await pool.query('ROLLBACK'); // Rollback the transaction on error
+        console.error('Error while inserting a new document:', error);
+        res.status(500).json({ success: false, message: 'Error inserting new document.' });
+    }
+});
+
+app.post('/insert-magazine', async (req, res) => {
+    const { title, isbn, publisher, year, month, copies } = req.body;
+
+    try {
+        await pool.query('BEGIN');
+
+        // Check if the magazine already exists
+        let query = 'SELECT DocumentID FROM public.magazine WHERE Title = $1';
+        let result = await pool.query(query, [title]);
+
+        let documentID;
+        if (result.rows.length > 0) {
+            // Existing magazine, use its DocumentID
+            documentID = result.rows[0].documentid;
+        } else {
+            // New magazine, get a unique DocumentID
+            query = 'SELECT nextval(\'public.document_id_sequence\') AS newDocumentID';
+            result = await pool.query(query);
+            documentID = result.rows[0].newdocumentid;
+
+            // Insert new magazine
+            query = 'INSERT INTO public.magazine (DocumentID, Title, ISBN, Publisher, Year, Month) VALUES ($1, $2, $3, $4, $5, $6)';
+            await pool.query(query, [documentID, title, isbn, publisher, year, month]);
+        }
+
+        // Insert copies into copy_of_document
+        for (let i = 1; i <= copies; i++) {
+            const copyID = `C${String(i).padStart(3, '0')}`;
+            query = 'INSERT INTO public.copy_of_document (DocumentID, CopyID, Status) VALUES ($1, $2, false)';
+            await pool.query(query, [documentID, copyID]);
+        }
+
+        await pool.query('COMMIT');
+        res.json({ success: true });
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error('Error while inserting magazine:', error);
+        res.status(500).json({ success: false, message: 'Error inserting magazine.' });
+    }
+});
+
+app.post('/insert-journal', async (req, res) => {
+    const { title, name, authors, year, issueNumber, publisher, copies } = req.body;
+
+    try {
+        await pool.query('BEGIN');
+
+        // Check if the journal article already exists
+        let query = 'SELECT DocumentID FROM public.journal_article WHERE Title = $1';
+        let result = await pool.query(query, [title]);
+
+        let documentID;
+        if (result.rows.length > 0) {
+            documentID = result.rows[0].documentid;
+        } else {
+            // New journal article, get a unique DocumentID
+            query = 'SELECT nextval(\'public.document_id_sequence\') AS newDocumentID';
+            result = await pool.query(query);
+            documentID = result.rows[0].newdocumentid;
+
+            // Insert new journal article
+            query = 'INSERT INTO public.journal_article (DocumentID, Title, Name, Authors, Year, IssueNumber, Publisher) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+            await pool.query(query, [documentID, title, name, authors, year, issueNumber, publisher]);
+        }
+
+        // Insert copies into copy_of_document
+        for (let i = 1; i <= copies; i++) {
+            const copyID = `C${String(i).padStart(3, '0')}`;
+            query = 'INSERT INTO public.copy_of_document (DocumentID, CopyID, Status) VALUES ($1, $2, false)';
+            await pool.query(query, [documentID, copyID]);
+        }
+
+        await pool.query('COMMIT');
+        res.json({ success: true });
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error('Error while inserting journal article:', error);
+        res.status(500).json({ success: false, message: 'Error inserting journal article.' });
+    }
+});
+
+app.post('/update-document', async (req, res) => {
+    const { documentType, name, title, authors, isbn, publisher, year, pages, month, issue } = req.body;
+
+    const tableMap = {
+        book: 'book',
+        magazine: 'magazine',
+        journal: 'journal_article'
+    };
+
+    try {
+        // Get the DocumentID for the document title
+        let query = `SELECT DocumentID FROM public.${tableMap[documentType]} WHERE Title = $1`;
+        let result = await pool.query(query, [title]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Document not found.' });
+        }
+
+        const documentID = result.rows[0].documentid;
+        let updateQuery = '';
+        let updateValues = [];
+
+        // Constructing update query based on the document type
+        switch (documentType) {
+            case 'book':
+                updateQuery = `UPDATE public.book SET Authors = $1, ISBN = $2, Publisher = $3, Year = $4, NumberPages = $5 WHERE DocumentID = $6`;
+                updateValues = [authors, isbn, publisher, year, pages, documentID];
+                break;
+            case 'magazine':
+                updateQuery = `UPDATE public.magazine SET ISBN = $1, Publisher = $2, Year = $3, Month = $4 WHERE DocumentID = $5`;
+                updateValues = [isbn, publisher, year, month, documentID];
+                break;
+            case 'journal':
+                updateQuery = `UPDATE public.journal_article SET Name = $1, Authors = $2, Year = $3, IssueNumber = $4, Publisher = $5 WHERE DocumentID = $6`;
+                updateValues = [name, authors, year, issue, publisher, documentID];
+                break;
+        }
+
+        // Execute the update query
+        result = await pool.query(updateQuery, updateValues);
+        if (result.rowCount > 0) {
+            res.json({ success: true, message: 'Document updated successfully.' });
+        } else {
+            res.status(400).json({ success: false, message: 'No changes were made to the document.' });
+        }
+    } catch (error) {
+        await pool.query('ROLLBACK');  // Good practice to ensure this happens for any error
+        console.error('Error deleting copies:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+
+
+app.post('/delete-copies', async (req, res) => {
+    const { title, copiesToDelete, documentType } = req.body;
+  
+    try {
+      // Begin a transaction
+      await pool.query('BEGIN');
+  
+      // Get the DocumentID from the appropriate table
+      const tableMap = {
+        book: 'book',
+        magazine: 'magazine',
+        journal: 'journal_article'
+      };
+  
+      let query = `SELECT DocumentID FROM public.${tableMap[documentType]} WHERE Title = $1`;
+      let result = await pool.query(query, [title]);
+  
+      if (result.rows.length === 0) {
+        throw new Error('Document not found.');
+      }
+  
+      const documentID = result.rows[0].documentid;
+  
+      // Get CopyIDs that are eligible for deletion
+      query = `
+        SELECT CopyID FROM public.copy_of_document
+        WHERE DocumentID = $1 AND Status = false
+        ORDER BY CopyID
+        LIMIT $2;
+      `;
+      const copyIdsResult = await pool.query(query, [documentID, copiesToDelete]);
+  
+      // Check if enough copies are available to delete
+      if (copyIdsResult.rowCount < copiesToDelete) {
+        await pool.query('ROLLBACK');
+        throw new Error('Not enough copies available to delete.');
+      }
+  
+      // Delete the copies
+      for (const row of copyIdsResult.rows) {
+        query = 'DELETE FROM public.copy_of_document WHERE CopyID = $1 AND DocumentID = $2';
+        await pool.query(query, [row.copyid, documentID]);
+      }
+  
+      // Commit the transaction
+      await pool.query('COMMIT');
+      res.json({ success: true, message: 'Copies deleted successfully.' });
+    } catch (error) {
+      await pool.query('ROLLBACK');
+      console.error('Error deleting copies:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
 
 
 
