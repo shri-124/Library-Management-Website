@@ -66,7 +66,7 @@ function hideModal() {
 
 function returnBook() {
     const titleElement = selectedBook.querySelector('.title');
-    const documentID = selectedBook.getAttribute('data-document-id'); // Assuming document ID is stored as a data attribute
+    const documentID = selectedBook.id
 
     if (!titleElement) {
         console.error('Title element not found:', selectedBook);
@@ -76,12 +76,27 @@ function returnBook() {
     const title = titleElement.textContent.trim();
 
     // Call the server to update the book's status
+
+    const clientEmail = sessionStorage.getItem('clientEmail'); // Retrieve the email from sessionStorage
+    if (clientEmail) {
+        loadCheckedOutBooks(clientEmail);
+    } else {
+        alert('No client email found');
+    }
+
+    console.log('clientEmail in client is ', clientEmail);
+    console.log('documentID in client is ', documentID);
+
+
     fetch('/return-book', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ documentID: documentID }) // Send document ID to the server
+        body: JSON.stringify({ 
+            clientEmail : clientEmail,
+            documentID: documentID
+        }) // Send cleintEmail and documentID to the server
     })
     .then(response => response.json())
     .then(data => {
@@ -140,10 +155,20 @@ function hideCheckoutModal() {
 
 function checkOutBook() {
     const titleElement = selectedBook.querySelector('.title');
+    const documentID = selectedBook.getAttribute('id');
+    const clientEmail = sessionStorage.getItem('clientEmail');
+
+    if (clientEmail) {
+        loadCheckedOutBooks(clientEmail);
+    } else {
+        alert('No client email found');
+    }
+
     if (!titleElement) {
         console.error('Title element not found:', selectedBook);
         return;
     }
+
     const title = titleElement.textContent.trim();
     const copiesElement = selectedBook.querySelector('.copies');
     if (!copiesElement) {
@@ -158,6 +183,39 @@ function checkOutBook() {
         return;
     }
 
+    fetch('/checkout-book', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ clientEmail: clientEmail, documentID: documentID })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            loadCheckedOutBooks(clientEmail);
+            if (copies > 1) {
+                copiesElement.textContent = 'copies: ' + (copies - 1);
+            } else {
+                selectedBook.remove(); // Remove the book entry if no more copies left
+            }
+
+            const newLi = document.createElement('li');
+            newLi.innerHTML = `<div class="book-entry">
+                <span class="title">${title}</span>
+                <span class="due-date">${calculateDueDate()}</span>
+            </div>`;
+            newLi.id = documentID;
+            document.querySelector('.checked-out ul').appendChild(newLi);
+            hideCheckoutModal();
+        } else {
+            alert('Failed to check out the book. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error checking out the book:', error);
+    });
+
     const checkedOutBooks = document.querySelectorAll('.checked-out .title');
     let alreadyCheckedOut = Array.from(checkedOutBooks).some(el => el.textContent.trim() === title);
 
@@ -166,22 +224,6 @@ function checkOutBook() {
         hideCheckoutModal();
         return;
     }
-
-    // Reduce copies or remove entry if only one left
-    if (copies > 1) {
-        copiesElement.textContent = 'copies: ' + (copies - 1);
-    } else {
-        selectedBook.remove(); // Remove the book entry if no more copies left
-    }
-
-    // Move or add book to the checked-out section
-    const newLi = document.createElement('li');
-    newLi.innerHTML = `<div class="book-entry">
-        <span class="title">${title}</span>
-        <span class="due-date">${calculateDueDate()}</span>
-    </div>`;
-    document.querySelector('.checked-out ul').appendChild(newLi);
-    hideCheckoutModal();
 }
 
 function calculateDueDate() {
@@ -229,12 +271,14 @@ async function loadCheckedOutBooks(clientEmail) {
             booksList.innerHTML = '<li>No books checked out.</li>';
         }
 
+        booksList.innerHTML = '';
         checkedOutBooks.forEach(book => {
             const li = document.createElement('li');
             li.innerHTML = `<div class="book-entry">
                 <span class="title">${book.title}</span>
                 <span class="due-date">Due back: ${new Date(book.lenddate).toLocaleDateString()}</span>
             </div>`;
+            li.id = book.documentid;
             li.onclick = () => showOptions(li);
             booksList.appendChild(li);
         });
@@ -274,6 +318,7 @@ async function loadAvailableBooks() {
                 <span class="title">${book.title}</span>
                 <span class="copies">copies: ${book.copies}</span>
             </div>`;
+            li.id = book.documentid;
             li.onclick = () => showCheckoutOptions(li); // Attach the checkout function
             booksList.appendChild(li);
         });
