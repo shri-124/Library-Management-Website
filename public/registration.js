@@ -268,9 +268,29 @@
                     const data = await response.json();
             
                     if (response.ok) {
-                        alert(data.message);
-                        // Optionally reset the form or perform other UI updates
                         document.getElementById('deleteForm').reset();
+                    } else {
+                        throw new Error(data.message);
+                    }
+                } 
+                catch (error) {
+                    console.error('Failed to delete client:', error);
+                    alert('Failed to delete client: ' + error.message);
+                }
+
+                try {
+                    const response = await fetch('/delete-credit_card', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email:email })
+                    });
+            
+                    const data = await response.json();
+            
+                    if (response.ok) {
+                        
                     } else {
                         throw new Error(data.message);
                     }

@@ -236,6 +236,26 @@ app.delete('/delete-client', async (req, res) => {
     }
 });
 
+app.delete('/delete-credit_card', async (req, res) => {
+    const { email } = req.body;  // Get the email from the request body
+    const query = `
+        DELETE FROM public.credit_card
+        WHERE "clientemail" = $1;
+    `;
+
+    try {
+        const result = await pool.query(query, [email]);
+        if (result.rowCount > 0) {
+            res.json({ success: true, message: 'Client deleted successfully.' });
+        } else {
+            res.status(404).json({ success: false, message: 'Client not found.' });
+        }
+    } catch (error) {
+        console.error('Error deleting client', error);
+        res.status(500).json({ success: false, message: 'Error deleting client.' });
+    }
+});
+
 
 // Route to fetch available books
 app.get('/available-books', async (req, res) => {
