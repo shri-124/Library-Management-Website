@@ -216,23 +216,57 @@ app.get('/checked-out-books/:email', async (req, res) => {
 });
 
 app.post('/return-book', async (req, res) => {
-    const { documentID } = req.body;
+    const { clientEmail, documentID } = req.body;
+    console.log('clientEmail in server is ', clientEmail);
+    console.log('documentID in server is ', documentID);
+
     const query = `
         UPDATE public.copy_of_document
         SET status = false, clientemail = NULL
-        WHERE documentid = $1 AND status = true
-        LIMIT 1;
+        WHERE clientemail = $1 AND documentid = $2 AND status = true;
     `;
 
+    console.log("Executing Query:", query);
+    console.log("Parameters:", [clientEmail, documentID]);
+
     try {
-        const result = await pool.query(query, [documentID]);
-        console.log('Query results:', result.rows); // Log the actual results from the query
-        res.json({ success: true });
+        const result = await pool.query(query, [clientEmail, documentID]);
+        console.log('Query results:', result.rowCount); // Log the number of rows affected
+        res.json({ success: result.rowCount > 0 });
     } catch (error) {
         console.error('Error updating document status', error);
         res.status(500).json({ success: false });
     }
 });
+
+app.post('/checkout-book', async (req, res) => {
+    const { clientEmail, documentID } = req.body;
+    console.log('clientEmail in server is ', clientEmail);
+    console.log('documentID in server is ', documentID);
+    
+    const query = `
+        UPDATE public.copy_of_document
+        SET status = true, clientemail = $1
+        WHERE documentid = $2 AND status = false
+    `;
+
+    console.log("Executing Query:", query);
+    console.log("Parameters:", [clientEmail, documentID]);
+
+    try {
+        const result = await pool.query(query, [clientEmail, documentID]);
+        if (result.rowCount > 0) {
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ success: false, message: "No available copies or document not found." });
+        }
+    } catch (error) {
+        console.error('Error updating document status for checkout', error);
+        res.status(500).json({ success: false, message: 'Error processing checkout.' });
+    }
+});
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
