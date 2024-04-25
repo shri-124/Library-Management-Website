@@ -260,14 +260,15 @@ app.delete('/delete-credit_card', async (req, res) => {
 // Route to fetch available books
 app.get('/available-books', async (req, res) => {
     const query = `
-        SELECT b.DocumentID, COALESCE(b.Title, m.Title, j.Title) AS Title, COUNT(c.CopyID) AS Copies
+        SELECT c.DocumentID, COALESCE(b.Title, m.Title, j.Title) AS Title, COUNT(c.CopyID) AS Copies
         FROM public.copy_of_document c
         LEFT JOIN public.book b ON c.DocumentID = b.DocumentID
         LEFT JOIN public.magazine m ON c.DocumentID = m.DocumentID
         LEFT JOIN public.journal_article j ON c.DocumentID = j.DocumentID
         WHERE c.Status = false
-        GROUP BY b.DocumentID, m.Title, j.Title, b.Title
-        ORDER BY b.DocumentID;
+        GROUP BY c.DocumentID, b.Title, m.Title, j.Title
+        ORDER BY c.DocumentID;
+    
     `;
     try {
         const result = await pool.query(query);
@@ -332,11 +333,41 @@ app.post('/checkout-book', async (req, res) => {
     console.log('clientEmail in server is ', clientEmail);
     console.log('documentID in server is ', documentID);
     
+    // const query = `
+    //     UPDATE public.copy_of_document
+    //     SET status = true, clientemail = $1
+    //     WHERE documentid = $2 AND status = false
+    // `;
+
     const query = `
+        WITH AvailableCopy AS (
+            SELECT copyid FROM public.copy_of_document
+            WHERE documentid = $2 AND status = false
+            ORDER BY copyid
+            LIMIT 1
+        )
         UPDATE public.copy_of_document
         SET status = true, clientemail = $1
-        WHERE documentid = $2 AND status = false
+        FROM AvailableCopy
+        WHERE copy_of_document.copyid = AvailableCopy.copyid 
+        AND copy_of_document.documentid = $2
+        AND NOT EXISTS (
+            SELECT 1 FROM public.copy_of_document
+            WHERE documentid = $2 AND clientemail = $1 AND status = true
+        );
     `;
+
+    // const subQuery = `
+    //     SELECT copyid FROM public.copy_of_document
+    //     WHERE documentid = $2 AND status = false
+    //     LIMIT 1
+    // `;
+    
+    // const query = `
+    //     UPDATE public.copy_of_document
+    //     SET status = true, clientemail = $1
+    //     WHERE copyid = (${subQuery})
+    // `;
 
     console.log("Executing Query:", query);
     console.log("Parameters:", [clientEmail, documentID]);

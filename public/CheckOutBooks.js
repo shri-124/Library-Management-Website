@@ -158,6 +158,8 @@ function checkOutBook() {
     const documentID = selectedBook.getAttribute('id');
     const clientEmail = sessionStorage.getItem('clientEmail');
 
+    console.log("documentID in client was ", documentID);
+
     if (clientEmail) {
         loadCheckedOutBooks(clientEmail);
     } else {
@@ -193,12 +195,13 @@ function checkOutBook() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            loadCheckedOutBooks(clientEmail);
             if (copies > 1) {
                 copiesElement.textContent = 'copies: ' + (copies - 1);
             } else {
                 selectedBook.remove(); // Remove the book entry if no more copies left
             }
+            loadCheckedOutBooks(clientEmail);
+            
 
             const newLi = document.createElement('li');
             newLi.innerHTML = `<div class="book-entry">
@@ -311,6 +314,7 @@ async function loadAvailableBooks() {
     try {
         const response = await fetch('/available-books');
         const availableBooks = await response.json();
+        console.log('Received available books:', availableBooks); // Log the JSON data
 
         availableBooks.forEach(book => {
             const li = document.createElement('li');
