@@ -269,13 +269,15 @@
             
                     if (response.ok) {
                         document.getElementById('deleteForm').reset();
+                    } else if (response.status == 400) {
+                        alert("cannot delete client since they have a book checked out") 
                     } else {
                         throw new Error(data.message);
                     }
                 } 
                 catch (error) {
                     console.error('Failed to delete client:', error);
-                    alert('Failed to delete client: ' + error.message);
+                    //alert('Failed to delete client: ' + error.message);
                 }
 
                 try {
@@ -290,13 +292,13 @@
                     const data = await response.json();
             
                     if (response.ok) {
-                        
+                        alert("Client deleted successfully")
                     } else {
                         throw new Error(data.message);
                     }
                 } catch (error) {
                     console.error('Failed to delete client:', error);
-                    alert('Failed to delete client: ' + error.message);
+                    //alert('Failed to delete client: ' + error.message);
                 }
             }
             

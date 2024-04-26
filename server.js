@@ -198,25 +198,65 @@ app.post('/updateClientPayment', async (req, res) => {
     }
 });
 
+// app.delete('/delete-client', async (req, res) => {
+//     const { email } = req.body;  // Get the email from the request body
+
+
+//     const query = `
+//         DELETE FROM public.client
+//         WHERE "Email" = $1;
+//     `;
+
+//     try {
+//         const result = await pool.query(query, [email]);
+//         if (result.rowCount > 0) {
+//             res.json({ success: true, message: 'Client deleted successfully.' });
+//         } else {
+//             res.status(404).json({ success: false, message: 'Client not found.' });
+//         }
+//     } catch (error) {
+//         console.error('Error deleting client', error);
+//         res.status(500).json({ success: false, message: 'Error deleting client.' });
+//     }
+// });
+
+
 app.delete('/delete-client', async (req, res) => {
     const { email } = req.body;  // Get the email from the request body
-    const query = `
-        DELETE FROM public.client
-        WHERE "Email" = $1;
+
+    // First, check if the email is associated with any document copies
+    const checkQuery = `
+        SELECT EXISTS (
+            SELECT 1 FROM public.copy_of_document
+            WHERE clientemail = $1
+        );
     `;
 
     try {
-        const result = await pool.query(query, [email]);
-        if (result.rowCount > 0) {
-            res.json({ success: true, message: 'Client deleted successfully.' });
+        const checkResult = await pool.query(checkQuery, [email]);
+        if (checkResult.rows[0].exists) {
+            // If the email exists, refuse to delete and send a message back
+            res.status(400).json({ success: false, message: 'Cannot delete client as they are linked to active document copies.' });
         } else {
-            res.status(404).json({ success: false, message: 'Client not found.' });
+            // If the email does not exist, proceed to delete the client
+            const deleteQuery = `
+                DELETE FROM public.client
+                WHERE "Email" = $1;
+            `;
+
+            const deleteResult = await pool.query(deleteQuery, [email]);
+            if (deleteResult.rowCount > 0) {
+                res.json({ success: true, message: 'Client deleted successfully.' });
+            } else {
+                res.status(404).json({ success: false, message: 'Client not found.' });
+            }
         }
     } catch (error) {
-        console.error('Error deleting client', error);
+        console.error('Error executing query', error);
         res.status(500).json({ success: false, message: 'Error deleting client.' });
     }
 });
+
 
 app.delete('/delete-credit_card', async (req, res) => {
     const { email } = req.body;  // Get the email from the request body
@@ -527,7 +567,7 @@ app.post('/update-document', async (req, res) => {
 
 app.post('/delete-copies', async (req, res) => {
     const { title, copiesToDelete, documentType } = req.body;
-  
+
     try {
       // Begin a transaction
       await pool.query('BEGIN');
