@@ -231,15 +231,16 @@ function checkOutBook() {
 
 function calculateDueDate() {
     let date = new Date();
+    alert("current date is " + date.getDate());
     date.setDate(date.getDate() + 28); // Add four weeks to the current date
-
+    alert("return date is " + date.getDate());
     // Create an array of month names to convert numeric months to their name equivalent
     const monthNames = ["January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December"];
     
     // Format the date as "Month Day, Year"
     const formattedDate = monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
-
+    alert("result is " + formattedDate);
     return formattedDate; // Return the formatted date string
 }
 
@@ -279,7 +280,7 @@ async function loadCheckedOutBooks(clientEmail) {
             const li = document.createElement('li');
             li.innerHTML = `<div class="book-entry">
                 <span class="title">${book.title}</span>
-                <span class="due-date">Due back: ${new Date(book.lenddate).toLocaleDateString()}</span>
+                <span class="due-date">Due back: ${calculateDueDate()}</span>
             </div>`;
             li.id = book.documentid;
             li.onclick = () => showOptions(li);
