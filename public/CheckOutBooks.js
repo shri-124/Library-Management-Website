@@ -231,16 +231,16 @@ function checkOutBook() {
 
 function calculateDueDate() {
     let date = new Date();
-    alert("current date is " + date.getDate());
+    // alert("current date is " + date.getDate());
     date.setDate(date.getDate() + 28); // Add four weeks to the current date
-    alert("return date is " + date.getDate());
+    // alert("return date is " + date.getDate());
     // Create an array of month names to convert numeric months to their name equivalent
     const monthNames = ["January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December"];
     
     // Format the date as "Month Day, Year"
     const formattedDate = monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
-    alert("result is " + formattedDate);
+    // alert("result is " + formattedDate);
     return formattedDate; // Return the formatted date string
 }
 
@@ -258,6 +258,21 @@ function calculateDueDate() {
 //         booksList.appendChild(li);
 //     });
 // }
+function formatDate(dateString) {
+    const date = new Date(dateString);
+
+    const year = date.getFullYear();
+    // getMonth() returns a zero-based index, so add 1 to get the correct month
+    const month = date.getMonth() + 1;
+    // Pad the month with a leading zero if it is less than 10
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const day = date.getDate();
+    // Pad the day with a leading zero if it is less than 10
+    const formattedDay = day < 10 ? `0${day}` : day;
+
+    return `${year}-${formattedMonth}-${formattedDay}`;
+}
+
 
 async function loadCheckedOutBooks(clientEmail) {
     const booksList = document.querySelector('.checked-out ul');
@@ -280,7 +295,7 @@ async function loadCheckedOutBooks(clientEmail) {
             const li = document.createElement('li');
             li.innerHTML = `<div class="book-entry">
                 <span class="title">${book.title}</span>
-                <span class="due-date">Due back: ${calculateDueDate()}</span>
+                <span class="due-date">Due back: ${formatDate(book.duedate)}</span>
             </div>`;
             li.id = book.documentid;
             li.onclick = () => showOptions(li);

@@ -306,18 +306,19 @@ app.get('/available-books', async (req, res) => {
 app.get('/checked-out-books/:email', async (req, res) => {
     const clientEmail = req.params.email; // get the email from URL parameter
     const query = `
-        SELECT c.DocumentID, COALESCE(b.Title, m.Title, j.Title) AS Title, c.LendDate
+        SELECT c.DocumentID, COALESCE(b.Title, m.Title, j.Title) AS Title, c.duedate
         FROM public.copy_of_document c
         LEFT JOIN public.book b ON c.DocumentID = b.DocumentID
         LEFT JOIN public.magazine m ON c.DocumentID = m.DocumentID
         LEFT JOIN public.journal_article j ON c.DocumentID = j.DocumentID
         WHERE c.Status = true AND c.ClientEmail = $1
-        ORDER BY c.LendDate;
+        ORDER BY c.duedate;
     `;
     try {
         const result = await pool.query(query, [clientEmail]);
         // console.log('Fetching checked-out books for:', clientEmail);
         // console.log('Query results:', result.rows); // Log the actual results from the query
+        console.log('Result of load books is', result.rows);
         res.json(result.rows);
     } catch (error) {
         console.error('Error executing query', error);
@@ -350,11 +351,49 @@ app.post('/return-book', async (req, res) => {
     }
 });
 
+// app.post('/checkout-book', async (req, res) => {
+//     const { clientEmail, documentID } = req.body;
+//     console.log('clientEmail in server is ', clientEmail);
+//     console.log('documentID in server is ', documentID);
+
+//     const query = `
+//         WITH AvailableCopy AS (
+//             SELECT copyid FROM public.copy_of_document
+//             WHERE documentid = $2 AND status = false
+//             ORDER BY copyid
+//             LIMIT 1
+//         )
+//         UPDATE public.copy_of_document
+//         SET status = true, clientemail = $1
+//         FROM AvailableCopy
+//         WHERE copy_of_document.copyid = AvailableCopy.copyid 
+//         AND copy_of_document.documentid = $2
+//         AND NOT EXISTS (
+//             SELECT 1 FROM public.copy_of_document
+//             WHERE documentid = $2 AND clientemail = $1 AND status = true
+//         );
+//     `;
+
+//     console.log("Executing Query:", query);
+//     console.log("Parameters:", [clientEmail, documentID]);
+
+//     try {
+//         const result = await pool.query(query, [clientEmail, documentID]);
+//         if (result.rowCount > 0) {
+//             res.json({ success: true });
+//         } else {
+//             res.status(404).json({ success: false, message: "No available copies or document not found." });
+//         }
+//     } catch (error) {
+//         console.error('Error updating document status for checkout', error);
+//         res.status(500).json({ success: false, message: 'Error processing checkout.' });
+//     }
+// });
+
 app.post('/checkout-book', async (req, res) => {
     const { clientEmail, documentID } = req.body;
-    console.log('clientEmail in server is ', clientEmail);
-    console.log('documentID in server is ', documentID);
 
+    // SQL query with duedate update
     const query = `
         WITH AvailableCopy AS (
             SELECT copyid FROM public.copy_of_document
@@ -363,7 +402,7 @@ app.post('/checkout-book', async (req, res) => {
             LIMIT 1
         )
         UPDATE public.copy_of_document
-        SET status = true, clientemail = $1
+        SET status = true, clientemail = $1, duedate = CURRENT_DATE + INTERVAL '4 weeks'
         FROM AvailableCopy
         WHERE copy_of_document.copyid = AvailableCopy.copyid 
         AND copy_of_document.documentid = $2
@@ -388,6 +427,7 @@ app.post('/checkout-book', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error processing checkout.' });
     }
 });
+
 
 app.post('/insert-book', async (req, res) => {
     const { title, authors, isbn, publisher, year, pages, copies } = req.body;
