@@ -1,0 +1,46 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: #eee;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+.main-container {
+    width: auto; /* Adjust width as needed */
+    padding: 10px;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin: 10px;
+}
+
+.library-title {
+    text-align: center;
+}
+
+input[type="text"], input[type="email"], input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    width: 100%; /* Full width */
+}
+
+button {
+    padding: 8px 16px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+button:hover {
+    background-color: darkred;
+}
+
+h2 {
+    padding-top: 10px; /* Spacing before each new form section */
+}

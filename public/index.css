@@ -1,0 +1,197 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    background: #fff;
+    padding: 2em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    width: 340px;
+}
+
+.login-header {
+    border-left: 5px solid red;
+    margin-bottom: 1em;
+    padding-left: 0.2em;
+    position: relative;
+}
+
+.login-title {
+    font-size: 1.5em;
+    
+    color: #333;
+}
+/* Existing styles... */
+
+.login-container {
+    background: #fff;
+    padding: 40px; /* Increased padding for more space inside */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    width: 400px; /* Increased width for a larger box */
+    margin: auto; /* This will center the box if there's extra space on the sides */
+    position: relative; /* Keep this if you're using absolute positioning inside */
+    /* ... other styles ... */
+}
+
+/* Adjust input width if necessary */
+.input-group input {
+    width: calc(100% - 20px); /* Subtract double the padding value to maintain the layout */
+    padding: 6px; /* Or as per your design requirements */
+    /* ... other styles ... */
+}
+
+/* ... rest of your CSS ... */
+
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5em;
+    color: #666;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* .login-button {
+    width: 100%;
+    padding: 1em;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 1em;
+} */
+
+
+
+.login-button {
+    display: block; /* Changed to block to fill the container */
+    width: calc(100% - 2em); /* Adjust width accounting for padding */
+    padding: 1em;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 1em;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box; /* This is crucial */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Add media queries if responsiveness is needed */
+@media (max-width) {
+    .login-button {
+        width: 100%; /* Full width on smaller screens */
+    }
+}
+
+.login-button:hover, .login-button:active {
+    background-color: darkred; /* Darker red on hover/active for feedback */
+}
+
+.login-button:focus {
+    outline: none; /* Optional: removes the outline on focus seen in some browsers */
+    background-color: darkred; /* Provides visual feedback on focus */
+}z
+
+.login-button:hover {
+    background-color: darkred;
+}
+
+.footer {
+    text-align: center;
+}
+
+.footer a {
+    color: red;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+/* Additions to existing index.css content */
+
+
+
+
+.main-container {
+    min-height: 100vh; /* This makes sure that the container takes at least the full height of the viewport */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers the content vertically */
+    align-items: center; /* Centers the content horizontally */
+    text-align: center;
+    padding-top: 5rem; /* Adjust this value to move the title up */
+}
+
+.library-title {
+    margin-top: 0; /* Removes top margin pushing it up */
+    margin-bottom: 5rem; /* Space between the title and the login form */
+    font-size: 2rem;
+    color: #333;
+}
+/* Additions to existing index.css content */
+
+html {
+    height: 100%;
+    box-sizing: border-box; /* Make sure the padding and borders are included in the element's total width and height */
+    border: 8px solid red; /* Adjust the border size and color as needed */
+    margin: 0;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    /* Rest of your body styles */
+    /* ... */
+}
+
+/* Make sure the main-container is adjusted if necessary */
+.main-container {
+    box-sizing: border-box; /* Ensures that padding and border are included in the width and height calculations */
+    padding-top: 3rem;
+    /* Other styles... */
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background: white;
+    border: 2px solid #333;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.popup p {
+    margin: 0;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.popup button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+

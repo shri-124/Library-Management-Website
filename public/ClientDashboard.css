@@ -1,0 +1,136 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #f4f4f4;
+}
+
+
+header {
+    background: red;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+main {
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 40%;
+}
+
+section.checked-out {
+    max-height: 400px; /* Limits the height of the checked-out section */
+    overflow-y: auto; /* Adds a scrollbar if content exceeds 400px */
+}
+
+section h2 {
+    background: #555; /* Dark background for the section header */
+    color: #fff; /* White text for contrast */
+    padding: 10px; /* Padding for the header */
+    border-radius: 3px; /* Rounded corners for the header */
+}
+
+section.available-books {
+    max-height: 400px; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling when necessary */
+}
+
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: red;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+ul {
+    list-style: none; /* Remove default list bullets */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Align with the container's edge */
+}
+
+
+
+li {
+    background: #f9f9f9; /* Light background for each list item */
+    border: 1px solid #ddd; /* Subtle border for the list items */
+    margin-bottom: 10px; /* Space between list items */
+    padding: 10px; /* Padding within list items */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Soft shadow for depth */
+}
+
+.search-bar {
+    text-align: center; /* Center the search bar and button */
+    padding: 7px;
+}
+
+.late-fees {
+    text-align: center; /* Center the search bar and button */
+    padding: 7px;
+}
+
+
+#search-input {
+    padding: 5px;
+    margin-right: 10px; /* Space between the input and button */
+    width: 300px; /* Or whatever width you prefer */
+    border: 5px solid #ddd;
+}
+
+#search-button {
+    padding: 5px;
+    background-color: #555;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#search-button:hover {
+    background-color: #666; /* Slightly lighter on hover for feedback */
+}
+
+.book-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.title {
+    /* font-weight: bold; */
+}
+
+.due-date {
+    color: #888;
+    font-style: italic;
+    text-align: right;
+}
+
+.copies {
+    color: #888;
+    font-style: italic;
+    text-align: right;
+}
+
