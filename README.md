@@ -1,9 +1,9 @@
-📚 Library Management Website
+# 📚 Library Management Website
 
 A full-stack web application that mimics a library management system. It provides functionality for both librarians and users to manage accounts, books, and borrowing records in a streamlined way.
 
-✨ Features
-👩‍🏫 Librarians
+# ✨ Features
+👩‍🏫 Librarians:
 
 Create and delete librarian accounts
 
@@ -13,7 +13,7 @@ View all clients and their currently checked-out items
 
 Track overdue returns
 
-👤 Users (Clients)
+👤 Users (Clients):
 
 Register and log in securely
 
@@ -25,7 +25,7 @@ View personal list of checked-out items
 
 See which items are overdue
 
-🛠️ Tech Stack
+# 🛠️ Tech Stack
 
 Frontend:
 
@@ -65,7 +65,7 @@ Deployment:
 Ready to deploy on Render
  for hosting the Node.js backend
 
-🚀 Getting Started
+# 🚀 Getting Started
 Prerequisites
 
 Node.js v18+
@@ -96,7 +96,7 @@ npm start
 
 Visit http://localhost:3000/login in your browser.
 
-🌐 Live Deployment (Render + Neon)
+# 🌐 Live Deployment (Render + Neon)
 
 Deploy this repo as a Web Service on Render.
 
@@ -104,7 +104,7 @@ Add DATABASE_URL in Render’s environment variables.
 
 Neon hosts the Postgres database in the cloud, ensuring the app works without running PostgreSQL locally.
 
-📖 Future Improvements
+# 📖 Future Improvements
 
 Add librarian analytics dashboard
 
